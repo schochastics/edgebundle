@@ -11,17 +11,19 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
 <!-- badges: end -->
 
-An R package that implements several edge bundling/flow map algorithms.
-So far it includes
+An R package that implements several edge bundling/flow and metro map
+algorithms. So far it includes
 
-  - force directed edge bundling
+  - Force directed edge bundling
     ([paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.212.7989&rep=rep1&type=pdf))
-  - stub bundling
+  - Stub bundling
     ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
-  - hammer bundling ([python
+  - Hammer bundling ([python
     code](https://datashader.org/_modules/datashader/bundling.html))
   - TNSS flow map
     ([paper](https://www.tandfonline.com/doi/pdf/10.1080/15230406.2018.1437359?casa_token=1_AncPoEZ8QAAAAA:Qdl39_xDlQVCloneMFhI8rGUGgkzo6mkCMLUJThQfDs6-5J8FcmZXW4oTDqWNKQrbhL3hGEWbTY))
+  - Multicriteria Metro map layout
+    ([paper](https://ieeexplore.ieee.org/iel5/2945/4359476/05406516.pdf?casa_token=aBkGQ_NuTBEAAAAA:3dmuSwYIfsA5S2MKT6s0oE9QNIacU7Y1YkzeI6QVH_OtwOtHhb1s_sQRPNn7C2rieK7nVxI))
 
 (*part of this package will eventually migrate to ggraph*)
 
