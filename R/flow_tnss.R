@@ -5,11 +5,13 @@
 #' @param circ logical. create circular dummy nodes around leafs.
 #' @param line logical. create dummy nodes on a straight line between root and leafs.
 #' @param diag logical. create dummy nodes diagonally through space.
+#' @param grid logical. create dummy nodes on a grid.
 #' @param rand logical. create random dummy nodes.
 #' @param ncirc numeric. number of circular dummy nodes per leaf.
 #' @param rcirc numeric. radius of circles around leaf nodes.
 #' @param nline numeric. number of straight line nodes per leaf.
 #' @param ndiag numeric. number of dummy nodes on diagonals.
+#' @param ngrid numeric. number of dummy nodes per dim on grid.
 #' @param nrand numeric. number of random nodes to create.
 #' @return coordinates of dummy nodes
 #' @author David Schoch
@@ -19,11 +21,13 @@ tnss_dummies <- function(xy,root,
                           circ = TRUE,
                           line = TRUE,
                           diag = TRUE,
+                          grid = FALSE,
                           rand = FALSE,
                           ncirc = 9,
                           rcirc = 2,
                           nline = 10,
                           ndiag = 50,
+                          ngrid = 50,
                           nrand = 50){
 
   n <- nrow(xy)
@@ -46,7 +50,6 @@ tnss_dummies <- function(xy,root,
     dat <- rbind(dat,xy_lines)
   }
 
-
   #diagonals through space
   if(diag){
     pts_tr <- c(max(xy[,1]),max(xy[,2]))
@@ -57,6 +60,15 @@ tnss_dummies <- function(xy,root,
     tseq <- seq(0.1,0.9,length.out = ndiag)
     xy_extra <- do.call(rbind,lapply(1:4,function(x) cbind(pts_extra[x,1] * tseq + xy[root,1] * (1-tseq), pts_extra[x,2] * tseq + xy[root,2] * (1-tseq)) ))
     dat <- rbind(dat,xy_extra)
+  }
+
+  # create an equidistant grid
+  if(grid){
+    xdiff <- seq(min(xy[,1]),max(xy[,1]),length.out = ngrid)
+    ydiff <- seq(min(xy[,2]),max(xy[,2]),length.out = ngrid)
+    xy_grid <- as.matrix(expand.grid(xdiff,ydiff))
+    colnames(xy_grid) <- NULL
+    dat <- rbind(dat,xy_grid)
   }
 
   # some random points

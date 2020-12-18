@@ -10,11 +10,13 @@ tnss_dummies(
   circ = TRUE,
   line = TRUE,
   diag = TRUE,
+  grid = FALSE,
   rand = FALSE,
   ncirc = 9,
   rcirc = 2,
   nline = 10,
   ndiag = 50,
+  ngrid = 50,
   nrand = 50
 )
 }
@@ -29,6 +31,8 @@ tnss_dummies(
 
 \item{diag}{logical. create dummy nodes diagonally through space.}
 
+\item{grid}{logical. create dummy nodes on a grid.}
+
 \item{rand}{logical. create random dummy nodes.}
 
 \item{ncirc}{numeric. number of circular dummy nodes per leaf.}
@@ -38,6 +42,8 @@ tnss_dummies(
 \item{nline}{numeric. number of straight line nodes per leaf.}
 
 \item{ndiag}{numeric. number of dummy nodes on diagonals.}
+
+\item{ngrid}{numeric. number of dummy nodes per dim on grid.}
 
 \item{nrand}{numeric. number of random nodes to create.}
 }
