@@ -1,7 +1,7 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# edgebundle
+# edgebundle <img src="man/figures/logo.png" align="right"/>
 
 <!-- badges: start -->
 
@@ -11,8 +11,8 @@ experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](h
 status](https://www.r-pkg.org/badges/version/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
 <!-- badges: end -->
 
-An R package that implements several edge bundling algorithms. So far it
-includes
+An R package that implements several edge bundling/flow map algorithms.
+So far it includes
 
   - force directed edge bundling
     ([paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.212.7989&rep=rep1&type=pdf))
@@ -20,8 +20,12 @@ includes
     ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
   - hammer bundling ([python
     code](https://datashader.org/_modules/datashader/bundling.html))
+  - TNSS flow map
+    ([paper](https://www.tandfonline.com/doi/pdf/10.1080/15230406.2018.1437359?casa_token=1_AncPoEZ8QAAAAA:Qdl39_xDlQVCloneMFhI8rGUGgkzo6mkCMLUJThQfDs6-5J8FcmZXW4oTDqWNKQrbhL3hGEWbTY))
 
 (*part of this package will eventually migrate to ggraph*)
+
+The API is not very opinionated yet and may change in future releases.
 
 ## Installation
 
@@ -35,10 +39,13 @@ remotes::install_github("schochastics/edgebundle")
 Note that `edgebundle` imports `reticulate` and uses a pretty big python
 library (datashader).
 
-## Usage
+## Edge bundling
 
+The expected input of each edge bundling function is a graph
+(igraph/network or tbl\_graph object) and a node layout.  
 All functions return a data frame of points along the edges of the
-network.
+network that can be plotted with ggplot2 using geom\_path or
+geom\_bezier for `edge_bundle_stub()`.
 
 ``` r
 library(igraph)
@@ -100,9 +107,30 @@ ggplot(sbundle)+
 
 <img src="man/figures/README-bezier-1.png" width="100%" />
 
-## Showcase (US flight dataset)
+## Flow maps
 
-*(The dataset is included in the package)*
+A flow map is a type of thematic map that represent movements. It may
+thus be considered a hybrid of a map and a flow diagram. The package so
+far implements a spatial one-to-many flow layout algorithm using
+triangulation and approximate Steiner trees.
+
+The function `tnss_tree()` expects a one-to-many flow network (i.e. a
+weighted star graph), a layout for the nodes and a set of dummy nodes
+created with `tnss_dummies()`.
+
+An example is given in the showcase section.
+
+## Metro Maps
+
+Metro map(-like) graph drawing follow certain rules, such as octilinear
+edges. The algorithm implemented in the packages uses hill-climbing to
+optimize several features desired in a metro map.
+
+![](man/figures/berlin.gif)
+
+## Showcase
+
+*(The us flight and migration datasets are included in the package)*
 
 ![](man/figures/flights_fdeb.png)
 
@@ -159,11 +187,33 @@ p3 <- ggplot()+
   theme(plot.title = element_text(color="white"))
 ```
 
+![](man/figures/cali2010_flow.png)
+
+Code:
+
+``` r
+xy <- cbind(state.center$x,state.center$y)[!state.name%in%c("Alaska","Hawaii"),]
+xy_dummy <- tnss_dummies(xy,4)
+gtree <- tnss_tree(cali2010,xy,xy_dummy,4,gamma = 0.9)
+
+ggraph(gtree,"manual",x=V(gtree)$x,y=V(gtree)$y)+
+  geom_polygon(data=us,aes(long,lat,group=group),fill="#FDF8C7",col="black")+
+  geom_edge_link(aes(width=flow,col=sqrt((xy[root,1]-..x..)^2 + (xy[root,2]-..y..)^2)),
+                 lineend = "round",show.legend = FALSE)+
+  scale_edge_width(range=c(0.5,4),trans="sqrt")+
+  scale_edge_color_gradient(low="#cc0000",high = "#0000cc")+
+  geom_node_point(aes(filter=tnss=="real"),size=1)+
+  geom_node_point(aes(filter=(name=="California")),size=5,shape=22,fill="#cc0000")+
+  theme_graph()+
+  labs(title="Migration from California (2010) - Flow map")
+```
+
 ## Disclaimer
 
 Edge bundling is able to produce neat looking network visualizations.
 However, they do not necessarily enhance readability. After
-experimenting with several algorithms, it became also quite evident that
-the algorithms are very sensitive to the parameter settings. Consult the
-original literature (if they even provide any guidelines) or experiment
-yourself and **do not expect any miracles**.
+experimenting with several methods, it became quite evident that the
+algorithms are very sensitive to the parameter settings (and often
+really only work in the showcase examples…). Consult the original
+literature (if they even provide any guidelines) or experiment yourself
+and **do not expect any miracles**.

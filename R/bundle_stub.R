@@ -30,10 +30,6 @@
 #'
 #' edge_bundle_stub(g,xy)
 #' # use ggforce::geom_bezier for plotting
-#' \donttest{
-#' ggplot(res,aes(x,y,group=group))+
-#'  geom_bezier()
-#' }
 #' @export
 
 edge_bundle_stub <- function(object,xy,alpha = 11,beta = 75,gamma = 40,t = 0.5,tshift = 0.5){
