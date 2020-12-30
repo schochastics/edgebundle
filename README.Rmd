@@ -197,6 +197,30 @@ ggraph(gtree,"manual",x=V(gtree)$x,y=V(gtree)$y)+
   labs(title="Migration from California (2010) - Flow map")
 ```
 
+![](man/figures/metro_berlin.png)
+Code:
+```{r metro_example, eval = FALSE}
+
+# the algorithm has problems with parallel edges
+g <- simplify(metro_berlin)
+xy <- cbind(V(g)$lon,V(g)$lat)*100
+
+# the algorithm is not very stable. try playing with the parameters
+xy_new <- metro_multicriteria(g,xy,l = 2,gr = 0.5,w = c(100,100,1,1,100),bsize = 35)
+
+# geographic layout
+ggraph(metro_berlin,"manual",x=xy[,1],y=xy[,2])+
+  geom_edge_link0(aes(col=route_I_counts),edge_width=2,show.legend = FALSE)+
+  geom_node_point(shape=21,col="white",fill="black",size=3,stroke=0.5)
+
+#schematic layout
+ggraph(metro_berlin,"manual",x=xy_new[,1],y=xy_new[,2])+
+  geom_edge_link0(aes(col=route_I_counts),edge_width=2,show.legend = FALSE)+
+  geom_node_point(shape=21,col="white",fill="black",size=3,stroke=0.5)+
+  theme_graph()+
+  ggtitle("Subway Network Berlin")
+```
+
 
 ## Disclaimer
 
