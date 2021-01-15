@@ -204,7 +204,7 @@ ggraph(gtree,"manual",x=V(gtree)$x,y=V(gtree)$y)+
                  lineend = "round",show.legend = FALSE)+
   scale_edge_width(range=c(0.5,4),trans="sqrt")+
   scale_edge_color_gradient(low="#cc0000",high = "#0000cc")+
-  geom_node_point(aes(filter=tnss=="real"),size=1)+
+  geom_node_point(aes(filter=tnss=="leaf"),size=1)+
   geom_node_point(aes(filter=(name=="California")),size=5,shape=22,fill="#cc0000")+
   theme_graph()+
   labs(title="Migration from California (2010) - Flow map")
