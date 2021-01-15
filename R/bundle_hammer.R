@@ -56,6 +56,8 @@ edge_bundle_hammer <- function(object,xy,bw=0.05,decay=0.7){
 #' "virtualenv" method is not available on Windows)
 #' @param conda Path to conda executable (or "auto" to find conda using the PATH
 #' and other conventional install locations)
+#' @export
+#'
 install_bundle_py <- function(method = "auto", conda = "auto") {
   if (!requireNamespace('reticulate', quietly = TRUE)) {
     stop('The `reticulate` package is required for this functionality')
