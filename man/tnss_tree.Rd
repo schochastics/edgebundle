@@ -4,7 +4,16 @@
 \alias{tnss_tree}
 \title{Create steiner tree from real and dummy points}
 \usage{
-tnss_tree(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3)
+tnss_tree(
+  g,
+  xy,
+  xydummy,
+  root,
+  gamma = 0.9,
+  epsilon = 0.3,
+  elen = Inf,
+  order = "random"
+)
 }
 \arguments{
 \item{g}{original flow network (must be a one-to-many flow network, i.e star graph). Must have a weight attribute indicating the flow}
@@ -18,6 +27,10 @@ tnss_tree(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3)
 \item{gamma}{edge length decay parameter}
 
 \item{epsilon}{smoothing factor for Douglas-Peucker Algorithm}
+
+\item{elen}{maximal length of edges in triangulation}
+
+\item{order}{in which order shortest paths are calculated ("random","weight","near","far")}
 }
 \value{
 approximated steiner tree from dummy and real nodes as igraph object

@@ -89,6 +89,8 @@ tnss_dummies <- function(xy,root,
 #' @param root root node id of the flow
 #' @param gamma edge length decay parameter
 #' @param epsilon smoothing factor for Douglas-Peucker Algorithm
+#' @param elen maximal length of edges in triangulation
+#' @param order in which order shortest paths are calculated ("random","weight","near","far")
 #' @return approximated steiner tree from dummy and real nodes as igraph object
 #' @references Sun, Shipeng. "An automated spatial flow layout algorithm using triangulation, approximate Steiner tree, and path smoothing." AutoCarto, 2016.
 #' @author David Schoch
@@ -98,7 +100,7 @@ tnss_dummies <- function(xy,root,
 #' gtree <- tnss_tree(cali2010,xy,xy_dummy,root = 4,gamma = 0.9)
 #' @export
 
-tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3){
+tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3,elen = Inf,order="random"){
 
   xymesh <- rbind(xy,xydummy)
 
@@ -117,7 +119,14 @@ tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3){
   igraph::V(g1)$x <- xymesh[,1]
   igraph::V(g1)$y <- xymesh[,2]
 
-  # g1$name <- "triangulated network"
+  # delete edges that are too long
+  el <- igraph::get.edgelist(g1,FALSE)
+  edges_xy <- cbind(xymesh[el[,1],1],xymesh[el[,1],2],xymesh[el[,2],1],xymesh[el[,2],2])
+  dist <- apply(edges_xy,1,function(x) sqrt((x[1]-x[3])^2+(x[2]-x[4])^2))
+  idx <- which(dist>elen)
+  if(length(idx)!=0){
+    g1 <- igraph::delete.edges(g1,idx)
+  }
 
   # edge weights from distances
   el <- igraph::get.edgelist(g1,FALSE)
@@ -137,6 +146,15 @@ tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3){
   dist2root <- sqrt((xy[root,1]-xy[leafs,1])^2 + (xy[root,2]-xy[leafs,2])^2)
   # minew <- min(igraph::E(g2)$weight)
   # leafs_order <- leafs[order(dist2root,decreasing = TRUE)]
+  if(order=="near"){
+    leafs <- leafs[order(dist2root,decreasing = FALSE)]
+  } else if(order=="far"){
+    leafs <- leafs[order(dist2root,decreasing = TRUE)]
+  } else if(order=="weight"){
+    leafs <- leafs
+  } else{
+    leafs <- sample(leafs)
+  }
   for(dest in leafs){
     k <- k + 1
     sp_list <- igraph::shortest_paths(g2, from = root,to = dest,weights = igraph::E(g2)$weight,output = "both")
@@ -198,6 +216,54 @@ tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3){
   gfinal
 }
 
+#' @title Smooth a steiner tree
+#' @description Converts the steiner tree to smooth paths
+#' @param g steiner tree computed with [tnss_tree]
+#' @param bw bandwidth of Gaussian Kernel
+#' @param n number of extra nodes to include per edge
+#' @return data.frame containing the smoothed paths
+#' @author David Schoch
+#' @examples
+#' xy <- cbind(state.center$x,state.center$y)[!state.name%in%c("Alaska","Hawaii"),]
+#' xy_dummy <- tnss_dummies(xy,root = 4)
+#' gtree <- tnss_tree(cali2010,xy,xy_dummy,root = 4,gamma = 0.9)
+#' tree_smooth <- tnss_smooth(gtree,bw = 10,n = 10)
+#' @export
+
+tnss_smooth <- function(g,bw = 3,n = 10){
+  root <- which(igraph::V(g)$tnss=="root")
+  leafs <- which(igraph::V(g)$tnss=="leaf")
+
+  el <- igraph::get.edgelist(g,names = FALSE)
+  xy <- cbind(igraph::V(g)$x,igraph::V(g)$y)
+
+  ord <- order(igraph::distances(g,root,leafs),decreasing=TRUE)
+  res <- matrix(0,0,4)
+
+  for(v in ord){
+    dest <- leafs[v]
+    sp <- unlist(igraph::shortest_paths(g,root,dest,output = "epath")$epath[[1]])
+
+    path <- el[sp,,drop=FALSE]
+    edges_xy <- cbind(xy[path[,1],1],xy[path[,1],2],xy[path[,2],1],xy[path[,2],2])
+    pathxy <- matrix(c(t(edges_xy)),ncol=2,byrow = TRUE)
+    pathxy <- pathxy[!duplicated(pathxy),]
+    flow <- igraph::E(g)$flow[sp]
+    flow <- c(flow,flow[length(flow)])
+    pathxy <- cbind(pathxy,flow)
+
+    if(nrow(pathxy)==2){
+      pathsm <- pathxy
+    } else{
+      pathsm <- edge_ksmooth(pathxy,bandwidth = bw,n=n)
+    }
+
+    res <- rbind(res,cbind(pathsm,dest))
+  }
+  df <- as.data.frame(res,row.names = NA)
+  names(df) <- c("x","y","flow","destination")
+  df
+}
 
 # helpers ----
 DouglasPeucker <- function(points,epsilon){
@@ -238,4 +304,57 @@ ShortestDistance <- function(p, line){
   y0 <- p[2]
   d=abs((y2-y1)*x0-(x2-x1)*y0+x2*y1-y2*x1)/sqrt((y2-y1)^2+(x2-x1)^2)
   return(as.numeric(d))
+}
+
+point_distance <- function(x) {
+  d <- diff(x)
+  sqrt(d[, 1]^2 + d[, 2]^2)
+}
+
+seq_multiple <- function(start, end, n) {
+  f <- function(x, y, z) {
+    sq <- seq(from = x, to = y, length.out = z)
+    sq[-1]
+  }
+  sq_mult <- mapply(f, start, end, n, SIMPLIFY = FALSE)
+  c(start[1], do.call(c, sq_mult))
+}
+
+densify <- function (x, n = 10L){
+  stopifnot(is.matrix(x), ncol(x) == 3, nrow(x) > 1)
+  n_pts <- nrow(x)
+  n_vec <- rep(n + 1, n_pts - 1)
+  x_dense <- seq_multiple(start = x[1:(n_pts - 1), 1], end = x[2:n_pts, 1], n = n_vec)
+  y_dense <- seq_multiple(start = x[1:(n_pts - 1), 2], end = x[2:n_pts, 2], n = n_vec)
+  f_dense <- seq_multiple(start = x[1:(n_pts - 1), 3], end = x[2:n_pts, 3], n = n_vec)
+  # f_dense <- c(rep(x[-nrow(x),3],each=n))
+  # f_dense <- c(f_dense,f_dense[length(f_dense)])
+
+  cbind(x_dense, y_dense,f_dense)
+}
+
+edge_ksmooth <- function (x, smoothness = 1, bandwidth=2, n = 10L) {
+  pad <- list(start = rbind(x[1, ], 2 * x[1, ] - x[2, ]),
+              end = rbind(x[nrow(x), ], 2 * x[nrow(x), ] - x[nrow(x) - 1, ]))
+  pad$start[2,3] <- pad$start[1,3]
+
+  pad$start <- densify(pad$start[2:1, ],n = n)
+  pad$start[nrow(pad$start),3] <- pad$start[nrow(pad$start)-1,3]
+  pad$end   <- densify(pad$end, n = n)
+
+  x_dense <- densify(x, n = n)
+
+  n_pts <- nrow(x_dense)
+  x_pad <- rbind(pad$start, x_dense, pad$end)
+  d <- c(0, cumsum(point_distance(x_pad)))
+  x_smooth <- stats::ksmooth(d, x_pad[, 1], n.points = length(d),
+                             kernel = "normal", bandwidth = bandwidth)
+  y_smooth <- stats::ksmooth(d, x_pad[, 2], n.points = length(d),
+                             kernel = "normal", bandwidth = bandwidth)
+  keep_rows <- (x_smooth$x >= d[nrow(pad$start) + 1]) &
+    (x_smooth$x <= d[nrow(pad$start) + n_pts])
+  x_new <- cbind(x_smooth$y, y_smooth$y,x_pad[,3])[keep_rows, ]
+  x_new[1, ] <- pad$start[nrow(pad$start), ]
+  x_new[nrow(x_new), ] <- pad$end[1, ]
+  return(x_new)
 }
