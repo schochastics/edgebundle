@@ -49,6 +49,8 @@ Implements the classic edge bundling by Holten.
 }
 \details{
 This is a re-implementation of https://github.com/upphiminn/d3.ForceBundle. Force directed edge bundling is slow (O(E^2)).
+
+see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
 }
 \examples{
 library(igraph)
@@ -58,6 +60,9 @@ edge_bundle_force(g,xy)
 }
 \references{
 Holten, Danny, and Jarke J. Van Wijk. "Force‐Directed Edge Bundling for Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd) 28, no. 3 (2009): 983-990.
+}
+\seealso{
+\link{edge_bundle_hammer},\link{edge_bundle_stub}
 }
 \author{
 David Schoch

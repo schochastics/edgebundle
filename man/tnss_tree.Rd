@@ -2,7 +2,7 @@
 % Please edit documentation in R/flow_tnss.R
 \name{tnss_tree}
 \alias{tnss_tree}
-\title{Create steiner tree from real and dummy points}
+\title{Create Steiner tree from real and dummy points}
 \usage{
 tnss_tree(
   g,
@@ -33,10 +33,13 @@ tnss_tree(
 \item{order}{in which order shortest paths are calculated ("random","weight","near","far")}
 }
 \value{
-approximated steiner tree from dummy and real nodes as igraph object
+approximated Steiner tree from dummy and real nodes as igraph object
 }
 \description{
-creates an approximated steiner tree for a flow map visualization
+creates an approximated Steiner tree for a flow map visualization
+}
+\details{
+Use \link{tnss_smooth} to smooth the edges of the tree
 }
 \examples{
 xy <- cbind(state.center$x,state.center$y)[!state.name\%in\%c("Alaska","Hawaii"),]

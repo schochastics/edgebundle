@@ -35,6 +35,9 @@ data.frame containing the bundled edges
 \description{
 Implements the stub edge bundling by Nocaj and Brandes
 }
+\details{
+see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
+}
 \examples{
 library(igraph)
 g <- graph.star(10,"undirected")
@@ -57,6 +60,9 @@ edge_bundle_stub(g,xy)
 }
 \references{
 Nocaj, Arlind, and Ulrik Brandes. "Stub bundling and confluent spirals for geographic networks." International Symposium on Graph Drawing. Springer, Cham, 2013.
+}
+\seealso{
+\link{edge_bundle_hammer},\link{edge_bundle_force}
 }
 \author{
 David Schoch

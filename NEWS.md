@@ -1,4 +1,10 @@
-# edgebundle 0.1.0.9999
+# edgebundle 0.2.0
+
+* added more documentation
+* cleanup of code
+* fixed readme
+
+# edgebundle 0.1.0
 
 * added smoothing for `tnss_tree()`
 

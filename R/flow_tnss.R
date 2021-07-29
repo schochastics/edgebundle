@@ -15,6 +15,10 @@
 #' @param nrand numeric. number of random nodes to create.
 #' @return coordinates of dummy nodes
 #' @author David Schoch
+#' @examples
+#' # dummy nodes for tree rooted in California
+#' xy <- cbind(state.center$x,state.center$y)
+#' xy_dummy <- tnss_dummies(xy,4)
 #' @export
 
 tnss_dummies <- function(xy,root,
@@ -81,8 +85,8 @@ tnss_dummies <- function(xy,root,
   dat[!duplicated(dat),]
 }
 
-#' @title Create steiner tree from real and dummy points
-#' @description creates an approximated steiner tree for a flow map visualization
+#' @title Create Steiner tree from real and dummy points
+#' @description creates an approximated Steiner tree for a flow map visualization
 #' @param g original flow network (must be a one-to-many flow network, i.e star graph). Must have a weight attribute indicating the flow
 #' @param xy coordinates of "real" nodes
 #' @param xydummy coordinates of "dummy" nodes
@@ -91,7 +95,8 @@ tnss_dummies <- function(xy,root,
 #' @param epsilon smoothing factor for Douglas-Peucker Algorithm
 #' @param elen maximal length of edges in triangulation
 #' @param order in which order shortest paths are calculated ("random","weight","near","far")
-#' @return approximated steiner tree from dummy and real nodes as igraph object
+#' @details Use [tnss_smooth] to smooth the edges of the tree
+#' @return approximated Steiner tree from dummy and real nodes as igraph object
 #' @references Sun, Shipeng. "An automated spatial flow layout algorithm using triangulation, approximate Steiner tree, and path smoothing." AutoCarto, 2016.
 #' @author David Schoch
 #' @examples
@@ -213,14 +218,16 @@ tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3,elen = Inf,ord
   gfinal$name <- "approx steiner tree"
   igraph::V(gfinal)$tnss[root] <- "root"
   igraph::V(gfinal)$tnss[leafs] <- "leaf"
+  class(gfinal) <- c("steiner_tree",class(gfinal))
   gfinal
 }
 
-#' @title Smooth a steiner tree
-#' @description Converts the steiner tree to smooth paths
-#' @param g steiner tree computed with [tnss_tree]
+#' @title Smooth a Steiner tree
+#' @description Converts the Steiner tree to smooth paths
+#' @param g Steiner tree computed with [tnss_tree]
 #' @param bw bandwidth of Gaussian Kernel
 #' @param n number of extra nodes to include per edge
+#' @details see see [online](https://github.com/schochastics/edgebundle) for tips on plotting the result
 #' @return data.frame containing the smoothed paths
 #' @author David Schoch
 #' @examples
@@ -231,6 +238,10 @@ tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3,elen = Inf,ord
 #' @export
 
 tnss_smooth <- function(g,bw = 3,n = 10){
+  if(!"steiner_tree" %in% class(g)){
+    stop("g must be a steiner tree created with tnss_tree().")
+  }
+
   root <- which(igraph::V(g)$tnss=="root")
   leafs <- which(igraph::V(g)$tnss=="leaf")
 

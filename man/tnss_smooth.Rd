@@ -2,12 +2,12 @@
 % Please edit documentation in R/flow_tnss.R
 \name{tnss_smooth}
 \alias{tnss_smooth}
-\title{Smooth a steiner tree}
+\title{Smooth a Steiner tree}
 \usage{
 tnss_smooth(g, bw = 3, n = 10)
 }
 \arguments{
-\item{g}{steiner tree computed with \link{tnss_tree}}
+\item{g}{Steiner tree computed with \link{tnss_tree}}
 
 \item{bw}{bandwidth of Gaussian Kernel}
 
@@ -17,7 +17,10 @@ tnss_smooth(g, bw = 3, n = 10)
 data.frame containing the smoothed paths
 }
 \description{
-Converts the steiner tree to smooth paths
+Converts the Steiner tree to smooth paths
+}
+\details{
+see see \href{https://github.com/schochastics/edgebundle}{online} for tips on plotting the result
 }
 \examples{
 xy <- cbind(state.center$x,state.center$y)[!state.name\%in\%c("Alaska","Hawaii"),]

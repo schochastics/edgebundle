@@ -9,6 +9,8 @@
 #' @param t numeric between 0 and 1. control point location
 #' @return data.frame containing the bundled edges
 #' @author David Schoch
+#' @details see [online](https://github.com/schochastics/edgebundle) for plotting tips
+#' @seealso [edge_bundle_hammer],[edge_bundle_force]
 #' @references
 #' Nocaj, Arlind, and Ulrik Brandes. "Stub bundling and confluent spirals for geographic networks." International Symposium on Graph Drawing. Springer, Cham, 2013.
 #' @examples

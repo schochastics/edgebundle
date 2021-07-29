@@ -5,8 +5,6 @@
 
 <!-- badges: start -->
 
-[![Lifecycle:
-experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://www.tidyverse.org/lifecycle/#experimental)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
 <!-- badges: end -->
@@ -14,16 +12,16 @@ status](https://www.r-pkg.org/badges/version/edgebundle)](https://CRAN.R-project
 An R package that implements several edge bundling/flow and metro map
 algorithms. So far it includes
 
-  - Force directed edge bundling
+-   Force directed edge bundling
     ([paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.212.7989&rep=rep1&type=pdf))
-  - Stub bundling
+-   Stub bundling
     ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
-  - Hammer bundling ([python
+-   Hammer bundling ([python
     code](https://datashader.org/_modules/datashader/bundling.html))
-  - TNSS flow map
+-   TNSS flow map
     ([paper](https://www.tandfonline.com/doi/pdf/10.1080/15230406.2018.1437359?casa_token=1_AncPoEZ8QAAAAA:Qdl39_xDlQVCloneMFhI8rGUGgkzo6mkCMLUJThQfDs6-5J8FcmZXW4oTDqWNKQrbhL3hGEWbTY))
-  - Multicriteria Metro map layout
-    ([paper](https://ieeexplore.ieee.org/iel5/2945/4359476/05406516.pdf?casa_token=aBkGQ_NuTBEAAAAA:3dmuSwYIfsA5S2MKT6s0oE9QNIacU7Y1YkzeI6QVH_OtwOtHhb1s_sQRPNn7C2rieK7nVxI))
+-   Multicriteria Metro map layout
+    ([paper](https://ieeexplore.ieee.org/document/5406516))
 
 (*part of this package will eventually migrate to ggraph*)
 
@@ -41,13 +39,18 @@ remotes::install_github("schochastics/edgebundle")
 Note that `edgebundle` imports `reticulate` and uses a pretty big python
 library (datashader).
 
+``` r
+library(edgebundle)
+library(igraph)
+```
+
 ## Edge bundling
 
 The expected input of each edge bundling function is a graph
 (igraph/network or tbl\_graph object) and a node layout.  
 All functions return a data frame of points along the edges of the
-network that can be plotted with ggplot2 using geom\_path or
-geom\_bezier for `edge_bundle_stub()`.
+network that can be plotted with {{ggplot2}} using `geom_path()` or
+`geom_bezier()` for `edge_bundle_stub()`.
 
 ``` r
 library(igraph)
@@ -66,7 +69,7 @@ head(fbundle)
 #> 6 0.03440142 1.81285 0.1515152     1
 ```
 
-The result can be visualized with ggplot.
+The result can be visualized as follows.
 
 ``` r
 library(ggplot2)
@@ -77,10 +80,10 @@ ggplot(fbundle)+
   theme_void()
 ```
 
-<img src="man/figures/README-plot-1.png" width="100%" />
+<img src="man/figures/README-plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 For `edge_bundle_stub()`, you need `geom_bezier()` from the package
-`ggforce`.
+{{ggforce}}.
 
 ``` r
 library(ggforce)
@@ -107,43 +110,16 @@ ggplot(sbundle)+
   theme_void()
 ```
 
-<img src="man/figures/README-bezier-1.png" width="100%" />
+<img src="man/figures/README-bezier-1.png" width="100%" style="display: block; margin: auto;" />
 
-## Flow maps
-
-A flow map is a type of thematic map that represent movements. It may
-thus be considered a hybrid of a map and a flow diagram. The package so
-far implements a spatial one-to-many flow layout algorithm using
-triangulation and approximate Steiner trees.
-
-The function `tnss_tree()` expects a one-to-many flow network (i.e. a
-weighted star graph), a layout for the nodes and a set of dummy nodes
-created with `tnss_dummies()`.
-
-An example is given in the showcase section.
-
-## Metro Maps
-
-Metro map(-like) graph drawing follow certain rules, such as octilinear
-edges. The algorithm implemented in the packages uses hill-climbing to
-optimize several features desired in a metro map.
-
-![](man/figures/berlin.gif)
-
-## Showcase
-
-*(The us flight and migration datasets are included in the package)*
-
-![](man/figures/flights_fdeb.png)
-
-![](man/figures/flights_heb.png)
-
-![](man/figures/flights_seb.png) Code:
+The typical edge bundling benchmark uses a dataset on us flights, which
+is included in the package.
 
 ``` r
 g <- us_flights
 xy <- cbind(V(g)$longitude,V(g)$latitude)
 verts <- data.frame(x=V(g)$longitude,y=V(g)$latitude)
+
 fbundle <- edge_bundle_force(g,xy,compatibility_threshold = 0.6)
 sbundle <- edge_bundle_stub(g,xy)
 hbundle <- edge_bundle_hammer(g,xy,bw = 0.7,decay = 0.5)
@@ -179,21 +155,38 @@ alpha_fct <- function(x,b=0.01,p=5,n=20){
 
 p3 <- ggplot()+
   geom_polygon(data=states,aes(long,lat,group=group),col="white",size=0.1,fill=NA)+
-  ggforce::geom_bezier(data = sbundle,aes(x,y,group=group,alpha=alpha_fct(..index..*20)),n=20,col="#9d0191",size=0.1,show.legend = FALSE)+
-  ggforce::geom_bezier(data = sbundle,aes(x,y,group=group,alpha=alpha_fct(..index..*20)),n=20,col="white",size=0.01,show.legend = FALSE)+
+  ggforce::geom_bezier(data = sbundle,aes(x,y,group=group,
+                                          alpha=alpha_fct(..index..*20)),n=20,
+                       col="#9d0191",size=0.1,show.legend = FALSE)+
+  ggforce::geom_bezier(data = sbundle,aes(x,y,group=group,
+                                          alpha=alpha_fct(..index..*20)),n=20,
+                       col="white",size=0.01,show.legend = FALSE)+
   geom_point(data = verts,aes(x,y),col="#9d0191",size=0.25)+
   geom_point(data = verts,aes(x,y),col="white",size=0.25,alpha=0.5)+
   geom_point(data=verts[verts$name!="",],aes(x,y), col="white", size=3,alpha=1)+
   labs(title="Stub Edge Bundling")+
   ggraph::theme_graph(background = "black")+
   theme(plot.title = element_text(color="white"))
+p1
+p2
+p3
 ```
 
-![](man/figures/cali2010_flow.png)
+<img src="man/figures/flights_fdeb.png" width="95%" style="display: block; margin: auto;" /><img src="man/figures/flights_heb.png" width="95%" style="display: block; margin: auto;" /><img src="man/figures/flights_seb.png" width="95%" style="display: block; margin: auto;" />
 
-Code:
+## Flow maps
+
+A flow map is a type of thematic map that represent movements. It may
+thus be considered a hybrid of a map and a flow diagram. The package so
+far implements a spatial one-to-many flow layout algorithm using
+triangulation and approximate Steiner trees.
+
+The function `tnss_tree()` expects a one-to-many flow network (i.e. a
+weighted star graph), a layout for the nodes and a set of dummy nodes
+created with `tnss_dummies()`.
 
 ``` r
+library(ggraph)
 xy <- cbind(state.center$x,state.center$y)[!state.name%in%c("Alaska","Hawaii"),]
 xy_dummy <- tnss_dummies(xy,4)
 gtree <- tnss_tree(cali2010,xy,xy_dummy,4,gamma = 0.9)
@@ -210,10 +203,37 @@ ggraph(gtree,"manual",x=V(gtree)$x,y=V(gtree)$y)+
   labs(title="Migration from California (2010) - Flow map")
 ```
 
-![](man/figures/metro_berlin.png) Code:
+<img src="man/figures/cali2010_flow.png" width="95%" style="display: block; margin: auto;" />
+
+To smooth the tree, use `tnss_smooth()`. Note that this changes the
+object type and you need to visualize it with {{ggplot2}} rather than
+{{ggraph}}.
 
 ``` r
+smooth_df <- tnss_smooth(gtree,bw=5,n=20)
 
+ggplot()+
+  geom_polygon(data=us,aes(long,lat,group=group),fill="#FDF8C7",col="black")+
+  geom_path(data = smooth_df,aes(x,y,group=destination,size=flow),
+            lineend = "round",col="firebrick3",alpha=1)+
+  theme_void()+
+  scale_size(range=c(0.5,3),guide = "none")+
+  labs(title="Migration from California (2010) - Flow map smoothed")
+```
+
+<img src="man/figures/cali2010_flow_smoothed.png" width="95%" style="display: block; margin: auto;" />
+
+See [this gallery](http://minard.schochastics.net/) for more examples
+and code.
+
+## Metro Maps
+
+Metro map(-like) graph drawing follow certain rules, such as octilinear
+edges. The algorithm implemented in the packages uses hill-climbing to
+optimize several features desired in a metro map. The package includes
+the metro map of Berlin as an example.
+
+``` r
 # the algorithm has problems with parallel edges
 g <- simplify(metro_berlin)
 xy <- cbind(V(g)$lon,V(g)$lat)*100
@@ -231,8 +251,10 @@ ggraph(metro_berlin,"manual",x=xy_new[,1],y=xy_new[,2])+
   geom_edge_link0(aes(col=route_I_counts),edge_width=2,show.legend = FALSE)+
   geom_node_point(shape=21,col="white",fill="black",size=3,stroke=0.5)+
   theme_graph()+
-  ggtitle("Subway Network Berlin")
+  labs(title = "Subway Network Berlin")
 ```
+
+<img src="man/figures/metro_berlin.png" width="95%" style="display: block; margin: auto;" />
 
 ## Disclaimer
 

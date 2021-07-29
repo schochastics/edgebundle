@@ -12,10 +12,19 @@
 #' - *Balanced Edge Length Criterion*: The length of edges incident to a particular station should be similar
 #' - *Line Straightness Criterion*: (not yet implemented) Edges that form part of a line should, where possible, be co-linear either side of each station that the line passes through
 #' - *Octiinearity Criterion*: Each edge should be drawn horizontally, vertically, or diagonally at 45 degree, so we penalize edges that are not at a desired angle
+#' see [online](https://github.com/schochastics/edgebundle) for more plotting tips
 #' @return new coordinates for stations
 #' @references
 #' Stott, Jonathan, et al. "Automatic metro map layout using multicriteria optimization." IEEE Transactions on Visualization and Computer Graphics 17.1 (2010): 101-114.
 #' @author David Schoch
+#' @examples
+#' # the algorithm has problems with parallel edges
+#' library(igraph)
+#' g <- simplify(metro_berlin)
+#' xy <- cbind(V(g)$lon,V(g)$lat)*100
+#'
+#' # the algorithm is not very stable. try playing with the parameters
+#' xy_new <- metro_multicriteria(g,xy,l = 2,gr = 0.5,w = c(100,100,1,1,100),bsize = 35)
 #' @export
 metro_multicriteria <- function(object,xy,l = 2,gr = 0.0025,w = rep(1,5),bsize = 5){
   n <- igraph::vcount(object)
