@@ -6,3 +6,6 @@
 ^\.github$
 png$
 gif$
+^CRAN-RELEASE$
+_pkgdown.yml
+pkgdown/

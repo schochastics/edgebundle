@@ -17,7 +17,7 @@
 #' @details see [online](https://github.com/schochastics/edgebundle) for plotting tips
 #' @seealso [edge_bundle_hammer],[edge_bundle_stub]
 #' @references
-#' Holten, Danny, and Jarke J. Van Wijk. "Force‐Directed Edge Bundling for Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd) 28, no. 3 (2009): 983-990.
+#' Holten, Danny, and Jarke J. Van Wijk. "Force-Directed Edge Bundling for Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd) 28, no. 3 (2009): 983-990.
 #' @examples
 #' library(igraph)
 #' g  <- graph_from_edgelist(matrix(c(1,12,2,11,3,10,4,9,5,8,6,7),ncol = 2,byrow = TRUE),FALSE)
