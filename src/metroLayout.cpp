@@ -158,8 +158,8 @@ NumericMatrix layout_as_metro_iter(List adj, IntegerMatrix el, List adj_deg2,
       yold = xy(v,1);
       xbest = xold;
       ybest = yold;
-      xoptions = {xold-gr,x,xold+gr,xold-gr,xold+gr,xold-gr,x,xold+gr};
-      yoptions = {yold+gr,yold+gr,yold+gr,y,y,yold-gr,yold-gr,yold-gr};
+      xoptions = {xold-gr,xold,xold+gr,xold-gr,xold+gr,xold-gr,xold,xold+gr};
+      yoptions = {yold+gr,yold+gr,yold+gr,yold,yold,yold-gr,yold-gr,yold-gr};
       for(int i=0;i<xoptions.length();++i){
         x = xoptions[i];
         y = yoptions[i];

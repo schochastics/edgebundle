@@ -28,7 +28,7 @@
 #' @export
 metro_multicriteria <- function(object,xy,l = 2,gr = 0.0025,w = rep(1,5),bsize = 5){
   n <- igraph::vcount(object)
-  lg <- l*gr
+  # lg <- l*gr
   adj <- as_adj_list1(object)
   adj <- lapply(adj, function(x) x-1)
   adj_deg2 <- adj[unlist(lapply(adj,length))==2]

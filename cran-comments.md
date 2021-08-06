@@ -1,4 +1,7 @@
-# Initial Submission 
+# Update to 0.2.1
+
+Fixed the valgrind issue that occurred here:
+https://www.stats.ox.ac.uk/pub/bdr/memtests/valgrind/edgebundle/edgebundle-Ex.Rout
 
 ## Test environments
 

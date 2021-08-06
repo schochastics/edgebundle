@@ -1,3 +1,7 @@
+# edgebundle 0.2.1
+
+Fixed an error that occurred with valgrind
+
 # edgebundle 0.2.0
 
 * added more documentation
