@@ -5,6 +5,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // force_bundle_iter
 List force_bundle_iter(NumericMatrix edges_xy, List elist, double K, int C, int P, int P_rate, double S, int I, double I_rate, double compatibility_threshold, double eps);
 RcppExport SEXP _edgebundle_force_bundle_iter(SEXP edges_xySEXP, SEXP elistSEXP, SEXP KSEXP, SEXP CSEXP, SEXP PSEXP, SEXP P_rateSEXP, SEXP SSEXP, SEXP ISEXP, SEXP I_rateSEXP, SEXP compatibility_thresholdSEXP, SEXP epsSEXP) {

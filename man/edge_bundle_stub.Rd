@@ -62,7 +62,7 @@ edge_bundle_stub(g,xy)
 Nocaj, Arlind, and Ulrik Brandes. "Stub bundling and confluent spirals for geographic networks." International Symposium on Graph Drawing. Springer, Cham, 2013.
 }
 \seealso{
-\link{edge_bundle_hammer},\link{edge_bundle_force}
+\link{edge_bundle_hammer},\link{edge_bundle_force}, \link{edge_bundle_path}
 }
 \author{
 David Schoch

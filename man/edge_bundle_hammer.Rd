@@ -30,7 +30,7 @@ To install all dependencies, use \link{install_bundle_py}.
 see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
 }
 \seealso{
-\link{edge_bundle_force},\link{edge_bundle_stub}
+\link{edge_bundle_force},\link{edge_bundle_stub}, \link{edge_bundle_path}
 }
 \author{
 David Schoch

@@ -15,7 +15,7 @@
 #' @return data.frame containing the bundled edges
 #' @author David Schoch
 #' @details see [online](https://github.com/schochastics/edgebundle) for plotting tips
-#' @seealso [edge_bundle_hammer],[edge_bundle_stub]
+#' @seealso [edge_bundle_hammer],[edge_bundle_stub],[edge_bundle_path]
 #' @references
 #' Holten, Danny, and Jarke J. Van Wijk. "Force-Directed Edge Bundling for Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd) 28, no. 3 (2009): 983-990.
 #' @examples

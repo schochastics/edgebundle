@@ -11,7 +11,7 @@
 #' @return data.frame containing the bundled edges
 #' @author David Schoch
 #' @details see [online](https://github.com/schochastics/edgebundle) for plotting tips
-#' @seealso [edge_bundle_force],[edge_bundle_stub]
+#' @seealso [edge_bundle_force],[edge_bundle_stub], [edge_bundle_path]
 #' @export
 
 edge_bundle_hammer <- function(object,xy,bw=0.05,decay=0.7){

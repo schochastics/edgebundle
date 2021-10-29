@@ -18,6 +18,7 @@ library(edgebundle)
 
 <!-- badges: start -->
 [![CRAN status](https://www.r-pkg.org/badges/version/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
+[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/edgebundle)](https://CRAN.R-project.org/package=edgebundle) 
 <!-- badges: end -->
 
 An R package that implements several edge bundling/flow and metro map algorithms. So far it includes
@@ -34,7 +35,13 @@ The API is not very opinionated yet and may change in future releases.
 
 ## Installation
 
-You can install the dev version of edgebundle with:
+The package is available on CRAN.
+
+```{r cran, eval=FALSE}
+install.packages("edgebundle")
+```
+
+The developer version can be installed with
 
 ``` {r dev, eval=FALSE}
 # install.packages("remotes")
@@ -121,6 +128,7 @@ verts <- data.frame(x=V(g)$longitude,y=V(g)$latitude)
 fbundle <- edge_bundle_force(g,xy,compatibility_threshold = 0.6)
 sbundle <- edge_bundle_stub(g,xy)
 hbundle <- edge_bundle_hammer(g,xy,bw = 0.7,decay = 0.5)
+pbundle <- edge_bundle_path(g,xy,max_distortion = 12,weight_fac = 2,segments = 50)
 
 states <- map_data("state")
 
@@ -165,15 +173,29 @@ p3 <- ggplot()+
   labs(title="Stub Edge Bundling")+
   ggraph::theme_graph(background = "black")+
   theme(plot.title = element_text(color="white"))
+
+p4 <- ggplot()+
+  geom_polygon(data=states,aes(long,lat,group=group),col="white",size=0.1,fill=NA)+
+  geom_path(data = pbundle,aes(x,y,group=group),col="#9d0191",size=0.05)+
+  geom_path(data = pbundle,aes(x,y,group=group),col="white",size=0.005)+
+  geom_point(data = verts,aes(x,y),col="#9d0191",size=0.25)+
+  geom_point(data = verts,aes(x,y),col="white",size=0.25,alpha=0.5)+
+  geom_point(data=verts[verts$name!="",],aes(x,y), col="white", size=3,alpha=1)+
+  labs(title="Edge-Path Bundling")+
+  ggraph::theme_graph(background = "black")+
+  theme(plot.title = element_text(color="white"))
+
 p1
 p2
 p3
+p4
 ```
 
 ```{r,fig.width=8,fig.height=6,fig.align='center',out.width="95%",echo=FALSE}
 knitr::include_graphics("man/figures/flights_fdeb.png")
 knitr::include_graphics("man/figures/flights_heb.png")
 knitr::include_graphics("man/figures/flights_seb.png")
+knitr::include_graphics("man/figures/flights_peb.png")
 ```
 
 

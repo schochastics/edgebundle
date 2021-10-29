@@ -1,3 +1,7 @@
+# edgebundle 0.2.1.9999
+
+added `edge_bundle_path()`
+
 # edgebundle 0.2.1
 
 Fixed an error that occurred with valgrind
