@@ -59,6 +59,7 @@ edge_bundle_path <- function(g,xy,max_distortion = 2,weight_fac = 2,segments = 2
     cpoints[[e]] <- xy[sp_verts,]
   }
   cpoints_bezier <- lapply(cpoints,approximateBezier,n=segments)
+
   idx <- seq(0, 1, length.out = segments)
   data_bundle <- as.data.frame(cbind(
     do.call("rbind",cpoints_bezier),

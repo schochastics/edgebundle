@@ -1,10 +1,10 @@
-# edgebundle 0.2.1.9999
+# edgebundle 0.3.0
 
-added `edge_bundle_path()`
+* added `edge_bundle_path()`
 
 # edgebundle 0.2.1
 
-Fixed an error that occurred with valgrind
+* Fixed an error that occurred with valgrind
 
 # edgebundle 0.2.0
 
