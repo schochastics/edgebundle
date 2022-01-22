@@ -1,11 +1,11 @@
 Package: edgebundle
 Title: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps
-Version: 0.3.0
+Version: 0.4.0
 Authors@R: 
     person(given = "David",
            family = "Schoch",
            role = c("aut", "cre"),
-           email = "david.schoch@manchester.ac.uk",
+           email = "david@schochastics.net",
            comment = c(ORCID = "0000-0003-2952-4812"))
 Description: Implements several algorithms for bundling edges in networks and flow and metro map layouts. This includes force directed edge bundling <doi:10.1111/j.1467-8659.2009.01450.x>, a flow algorithm based on Steiner trees<doi:10.1080/15230406.2018.1437359> and a multicriteria optimization method for metro map layouts <doi:10.1109/TVCG.2010.24>.
 URL: http://edgebundle.schochastics.net/, https://github.com/schochastics/edgebundle
@@ -14,7 +14,8 @@ License: MIT + file LICENSE
 Suggests: 
     testthat (>= 2.0.0),
     network,
-    tidygraph
+    tidygraph,
+    reticulate
 Config/testthat/edition: 2
 Encoding: UTF-8
 LazyData: true
@@ -25,7 +26,6 @@ LinkingTo:
 Imports: 
     Rcpp,
     igraph,
-    reticulate,
     interp
 Depends: 
-    R (>= 2.10)
+    R (>= 3.5)
