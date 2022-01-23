@@ -1,6 +1,6 @@
 # edgebundle 0.4.0
 
-* moved reticulate to Suggest
+
 
 # edgebundle 0.3.0
 
