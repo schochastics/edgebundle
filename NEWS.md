@@ -1,6 +1,6 @@
-# edgebundle 0.4.0
+# edgebundle 0.3.1
 
-
+* minor bug fixes
 
 # edgebundle 0.3.0
 

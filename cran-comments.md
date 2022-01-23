@@ -1,20 +1,12 @@
-# Update to 0.3.0
+# Update to 0.3.1
 
-added a new edge bundling function
+minor bug fixes and change of maintainer email address
 
 ## Test environments
 
-* Ubuntu 20.04: R 4.1
+* Ubuntu 20.04: R 4.1.2
 * win-builder (devel and release)
 
 ## R CMD check results
 
 0 errors | 0 warnings | 0 note
-
-* This is a new release.
-
-
-# Update to 0.2.1
-
-Fixed the valgrind issue that occurred here:
-https://www.stats.ox.ac.uk/pub/bdr/memtests/valgrind/edgebundle/edgebundle-Ex.Rout
