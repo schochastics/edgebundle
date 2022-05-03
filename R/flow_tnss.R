@@ -114,7 +114,7 @@ tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3,elen = Inf,ord
   leafs <- setdiff(verts,root)
 
   #triangulate points
-  tria <- interp::tri.mesh(xymesh[,1],xymesh[,2])
+  tria <- interp::tri.mesh(xymesh[,1],xymesh[,2], duplicate = "remove")
 
   # create network
   g1 <- igraph::graph_from_edgelist(rbind(tria$trlist[,1:2],tria$trlist[,2:3]),F)

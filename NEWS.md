@@ -1,3 +1,7 @@
+# edgebundle 0.3.2.9000
+
+* fixed a bug in `tnss_tree()` which created duplicated mesh points
+
 # edgebundle 0.3.1
 
 * minor bug fixes
