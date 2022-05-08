@@ -92,7 +92,7 @@ tnss_dummies <- function(xy,root,
 #' @param xydummy coordinates of "dummy" nodes
 #' @param root root node id of the flow
 #' @param gamma edge length decay parameter
-#' @param epsilon smoothing factor for Douglas-Peucker Algorithm
+#' @param epsilon percentage of points keept on a line after straightening with Visvalingam Algorithm
 #' @param elen maximal length of edges in triangulation
 #' @param order in which order shortest paths are calculated ("random","weight","near","far")
 #' @details Use [tnss_smooth] to smooth the edges of the tree
@@ -184,7 +184,8 @@ tnss_tree <- function(g,xy,xydummy,root,gamma = 0.9,epsilon = 0.3,elen = Inf,ord
   del2 <- c()
   for(dest in leafs){
     sp <- unlist(igraph::shortest_paths(g4,from = root,to=dest)$vpath)
-    keep <- which(duplicated(rbind(xymesh1[sp,],DouglasPeucker(xymesh1[sp,],epsilon = epsilon)),fromLast = TRUE))
+    keep <- which(duplicated(
+      rbind(xymesh1[sp,],visvalingam(xymesh1[sp,],epsilon = epsilon)),fromLast = TRUE))
     del <- sp[-keep]
     del <- del[deg[del]==2]
     del2 <- c(del2,del)
@@ -368,4 +369,51 @@ edge_ksmooth <- function (x, smoothness = 1, bandwidth=2, n = 10L) {
   x_new[1, ] <- pad$start[nrow(pad$start), ]
   x_new[nrow(x_new), ] <- pad$end[1, ]
   return(x_new)
+}
+
+
+# source: https://coolbutuseless.github.io/2022/05/07/a-naive-implementation-of-visvalingams-line-simplification-in-r/
+# credit to @coolbutuseless
+visvalingam <- function(points, epsilon) {
+  x <- points[,1]
+  y <- points[,2]
+  n <- max(c(floor(length(x)*epsilon),2))
+  # Sanity Check
+  stopifnot(length(x) == length(y))
+  stopifnot (n <= length(x) && n >= 2)
+  if (length(x) == 2) {
+    return(list(x=x, y=y))
+  }
+
+  # Remove points
+  for (i in seq_len(length(x) - n)) {
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Find areas
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    x1 <- head(x, -2)
+    x2 <- head(x[-1], -1)
+    x3 <- tail(x, -2)
+
+    y1 <- head(y, -2)
+    y2 <- head(y[-1], -1)
+    y3 <- tail(y, -2)
+
+    a0 <- x1 - x2
+    a1 <- x3 - x2
+
+    b0 <- y1 - y2
+    b1 <- y3 - y2
+
+    tri_areas <- abs(a0 * b1 - a1 * b0)  # / 2
+
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    # Find minimim area triangle and remove its centre vertex from all pts
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    min_tri <- which.min(tri_areas)
+
+    x <- x[-(min_tri + 1)]
+    y <- y[-(min_tri + 1)]
+  }
+
+  cbind(x,y)
 }
