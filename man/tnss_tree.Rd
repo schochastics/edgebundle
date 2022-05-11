@@ -26,7 +26,7 @@ tnss_tree(
 
 \item{gamma}{edge length decay parameter}
 
-\item{epsilon}{smoothing factor for Douglas-Peucker Algorithm}
+\item{epsilon}{percentage of points keept on a line after straightening with Visvalingam Algorithm}
 
 \item{elen}{maximal length of edges in triangulation}
 
