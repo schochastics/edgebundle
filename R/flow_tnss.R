@@ -374,6 +374,7 @@ edge_ksmooth <- function (x, smoothness = 1, bandwidth=2, n = 10L) {
 
 # source: https://coolbutuseless.github.io/2022/05/07/a-naive-implementation-of-visvalingams-line-simplification-in-r/
 # credit to @coolbutuseless
+#' @importFrom utils head tail
 visvalingam <- function(points, epsilon) {
   x <- points[,1]
   y <- points[,2]
