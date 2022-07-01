@@ -1,6 +1,6 @@
 Package: edgebundle
 Title: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps
-Version: 0.4.0.9000
+Version: 0.4.0
 Authors@R: 
     person(given = "David",
            family = "Schoch",
@@ -19,7 +19,7 @@ Config/testthat/edition: 2
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
-RoxygenNote: 7.1.2
+RoxygenNote: 7.2.0
 LinkingTo: 
     Rcpp
 Imports: 
