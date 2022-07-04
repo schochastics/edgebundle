@@ -1,6 +1,7 @@
 # Update to 0.4.0
 
-bug fixes and non user facing changes
+* bug fixes and non user facing changes
+* fixed bitwise AND and OR warning
 
 ## Test environments
 
