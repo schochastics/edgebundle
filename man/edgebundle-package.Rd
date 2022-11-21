@@ -8,13 +8,14 @@
 \description{
 An R package that implements several edge bundling/flow and metro map algorithms.
 It includes:
-
-Force directed edge bundling \code{edge_bundle_force()}
-Stub bundling  \code{edge_bundle_stub()}
-Hammer bundling  \code{edge_bundle_hammer()}
-Edge-path bundling  \code{edge_bundle_path()}
-TNSS flow map \verb{tnss_*()}
-Multicriteria Metro map layout \code{metro_multicriteria()}
+\itemize{
+\item Force directed edge bundling \code{edge_bundle_force()}
+\item Stub bundling  \code{edge_bundle_stub()}
+\item Hammer bundling  \code{edge_bundle_hammer()}
+\item Edge-path bundling  \code{edge_bundle_path()}
+\item TNSS flow map \verb{tnss_*()}
+\item Multicriteria Metro map layout \code{metro_multicriteria()}
+}
 }
 \seealso{
 Useful links:
