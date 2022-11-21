@@ -1,3 +1,9 @@
+# edgebundle 0.4.1
+
+* added package level docs
+* added citation file
+* some minor bug fixes
+
 # edgebundle 0.4.0
 
 * changed line straightening in `tnss_tree()` to Visvalingam algorithm (NOTE: The meaning of the epsilon parameter is now reversed!)
