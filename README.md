@@ -15,17 +15,15 @@ Downloads](http://cranlogs.r-pkg.org/badges/edgebundle)](https://CRAN.R-project.
 An R package that implements several edge bundling/flow and metro map
 algorithms. So far it includes
 
--   Force directed edge bundling
-    ([paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.212.7989&rep=rep1&type=pdf))
--   Stub bundling
-    ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
--   Hammer bundling ([python
-    code](https://datashader.org/_modules/datashader/bundling.html))
--   Edge-path bundling ([paper](https://arxiv.org/abs/2108.05467))
--   TNSS flow map
-    ([paper](https://www.tandfonline.com/doi/pdf/10.1080/15230406.2018.1437359?casa_token=1_AncPoEZ8QAAAAA:Qdl39_xDlQVCloneMFhI8rGUGgkzo6mkCMLUJThQfDs6-5J8FcmZXW4oTDqWNKQrbhL3hGEWbTY))
--   Multicriteria Metro map layout
-    ([paper](https://ieeexplore.ieee.org/document/5406516))
+- Force directed edge bundling
+- Stub bundling
+  ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
+- Hammer bundling ([python
+  code](https://datashader.org/_modules/datashader/bundling.html))
+- Edge-path bundling ([paper](https://arxiv.org/abs/2108.05467))
+- TNSS flow map ([paper](https://doi.org/10.1080/15230406.2018.1437359))
+- Multicriteria Metro map layout
+  ([paper](https://doi.org/10.1109/TVCG.2010.24))
 
 (The API is not very opinionated yet and may change in future releases.)
 
@@ -92,6 +90,7 @@ ggplot(fbundle) +
 <img src="man/figures/README-plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 ``` r
+
 # simple edge-path bundling example
 g <- graph_from_edgelist(matrix(c(1, 2, 1, 6, 1, 4, 2, 3, 3, 4, 4, 5, 5, 6), 
                                 ncol = 2, byrow = TRUE), FALSE)
@@ -304,6 +303,7 @@ optimize several features desired in a metro map. The package includes
 the metro map of Berlin as an example.
 
 ``` r
+
 # the algorithm has problems with parallel edges
 g <- simplify(metro_berlin)
 xy <- cbind(V(g)$lon,V(g)$lat)*100

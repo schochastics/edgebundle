@@ -24,12 +24,12 @@ library(edgebundle)
 
 An R package that implements several edge bundling/flow and metro map algorithms. So far it includes
 
-- Force directed edge bundling ([paper](https://citeseerx.ist.psu.edu/viewdoc/download?doi=10.1.1.212.7989&rep=rep1&type=pdf))
+- Force directed edge bundling 
 - Stub bundling ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
 - Hammer bundling ([python code](https://datashader.org/_modules/datashader/bundling.html))
 - Edge-path bundling ([paper](https://arxiv.org/abs/2108.05467))
-- TNSS flow map ([paper](https://www.tandfonline.com/doi/pdf/10.1080/15230406.2018.1437359?casa_token=1_AncPoEZ8QAAAAA:Qdl39_xDlQVCloneMFhI8rGUGgkzo6mkCMLUJThQfDs6-5J8FcmZXW4oTDqWNKQrbhL3hGEWbTY))
-- Multicriteria Metro map layout ([paper](https://ieeexplore.ieee.org/document/5406516))
+- TNSS flow map ([paper](https://doi.org/10.1080/15230406.2018.1437359))
+- Multicriteria Metro map layout ([paper](https://doi.org/10.1109/TVCG.2010.24))
 
 (The API is not very opinionated yet and may change in future releases.)
 
