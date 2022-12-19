@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/schochastics/edgebundle/workflows/R-CMD-check/badge.svg)](https://github.com/schochastics/edgebundle/actions)
+[![R-CMD-check](https://github.com/schochastics/edgebundle/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/schochastics/edgebundle/actions/workflows/R-CMD-check.yaml)
 [![CRAN
 status](https://www.r-pkg.org/badges/version/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
 [![CRAN
