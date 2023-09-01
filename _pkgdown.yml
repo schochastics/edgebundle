@@ -1,35 +1,17 @@
-title: edgebundle
-destination: ../pkgdown_sites/edgebundle
-
-home:
-  title: Edgebundling and Flow Maps in R
-  description: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps
+url: https://schochastics.github.io/edgebundle/
 template:
-  opengraph:
-    image:
-      src: man/figures/logo.png
-      alt: "edgebundle - Edgebundling and Flow Maps in R"
-    twitter:
-      creator: "@schochastics"
-      card: summary_large_image
-  params:
-    bootswatch: simplex
-
+  bootstrap: 5
+  bslib:
+    bg: "#F9F7F7"
+    fg: "#112D4E"
+    primary: "#3F72AF"
+    text-muted: "#FFFFFF"
+    base_font: {google: "Roboto"}
+    heading_font: {google: "Roboto Slab"}
+    code_font: {google: "JetBrains Mono"}
 navbar:
-  left:
-    - icon: fa-home
-      href: index.html
-    - text: Tutorials
-      menu:
-      -  text: Blog Post
-         href: http://blog.schochastics.net/post/non-hierarchical-edge-bundling-in-r/
-  right:
-      - icon: fa-newspaper-o
-        text: "News"
-        href: news/index.html
-      - icon: fa-file-code-o
-        text: "Functions"
-        href: reference/index.html
-      - icon: fa-github fa-lg
-        text: "Github"
-        href: https://github.com/schochastics/edgebundle
+  bg: none
+  type: light
+  structure:
+    left:  [intro, reference, articles, news]
+    right: [github]

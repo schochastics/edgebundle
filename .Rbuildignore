@@ -10,3 +10,6 @@ gif$
 _pkgdown.yml
 pkgdown/
 ^CRAN-SUBMISSION$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
