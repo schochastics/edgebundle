@@ -1,11 +1,10 @@
-# Update to 0.4.1
+# Update to 0.4.2
 
-* Fixed broken URL in README
-* bug fixes and non user facing changes
+* code clean and maintenance
 
 ## Test environments
 
-* Ubuntu 20.04: R 4.2.2
+* Ubuntu 22.04: R 4.3.2
 * win-builder (devel and release)
 
 ## R CMD check results

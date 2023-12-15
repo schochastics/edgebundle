@@ -20,8 +20,8 @@ It includes:
 \seealso{
 Useful links:
 \itemize{
-  \item \url{http://edgebundle.schochastics.net/}
   \item \url{https://github.com/schochastics/edgebundle}
+  \item \url{https://schochastics.github.io/edgebundle/}
   \item Report bugs at \url{https://github.com/schochastics/edgebundle/issues}
 }
 

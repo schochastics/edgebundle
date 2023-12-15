@@ -54,9 +54,14 @@ see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
 }
 \examples{
 library(igraph)
-g  <- graph_from_edgelist(matrix(c(1,12,2,11,3,10,4,9,5,8,6,7),ncol = 2,byrow = TRUE),FALSE)
-xy <- cbind(c(rep(0,6),rep(1,6)),c(1:6,1:6))
-edge_bundle_force(g,xy)
+g <- graph_from_edgelist(
+    matrix(c(
+        1, 12, 2, 11, 3, 10,
+        4, 9, 5, 8, 6, 7
+    ), ncol = 2, byrow = TRUE), FALSE
+)
+xy <- cbind(c(rep(0, 6), rep(1, 6)), c(1:6, 1:6))
+edge_bundle_force(g, xy)
 }
 \references{
 Holten, Danny, and Jarke J. Van Wijk. "Force-Directed Edge Bundling for Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd) 28, no. 3 (2009): 983-990.

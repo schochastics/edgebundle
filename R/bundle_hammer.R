@@ -14,40 +14,38 @@
 #' @seealso [edge_bundle_force],[edge_bundle_stub], [edge_bundle_path]
 #' @export
 
-edge_bundle_hammer <- function(object,xy,bw=0.05,decay=0.7){
-  if (!requireNamespace('reticulate', quietly = TRUE)) {
-    stop('The `reticulate` package is required for this functionality')
-  }
-  if(any(class(object)=="igraph")){
-    if (!requireNamespace('igraph', quietly = TRUE)) {
-      stop('The `igraph` package is required for this functionality')
+edge_bundle_hammer <- function(object, xy, bw = 0.05, decay = 0.7) {
+    if (!requireNamespace("reticulate", quietly = TRUE)) {
+        stop("The `reticulate` package is required for this functionality")
     }
-    nodes <- data.frame(name=paste0("node",0:(igraph::vcount(object)-1)),x=xy[,1],y=xy[,2])
-    el <- igraph::get.edgelist(object,names = FALSE)
-    el1 <- data.frame(source=el[,1]-1,target=el[,2]-1)
-
-  } else if(any(class(object)=="tbl_graph")){
-    if (!requireNamespace('tidygraph', quietly = TRUE)) {
-      stop('The `tidygraph` package is required for this functionality')
+    if (any(class(object) == "igraph")) {
+        if (!requireNamespace("igraph", quietly = TRUE)) {
+            stop("The `igraph` package is required for this functionality")
+        }
+        nodes <- data.frame(name = paste0("node", 0:(igraph::vcount(object) - 1)), x = xy[, 1], y = xy[, 2])
+        el <- igraph::get.edgelist(object, names = FALSE)
+        el1 <- data.frame(source = el[, 1] - 1, target = el[, 2] - 1)
+    } else if (any(class(object) == "tbl_graph")) {
+        if (!requireNamespace("tidygraph", quietly = TRUE)) {
+            stop("The `tidygraph` package is required for this functionality")
+        }
+        object <- tidygraph::as.igraph(object)
+        nodes <- data.frame(name = paste0("node", 0:(igraph::vcount(object) - 1)), x = xy[, 1], y = xy[, 2])
+        el <- igraph::get.edgelist(object, names = FALSE)
+        el1 <- data.frame(source = el[, 1] - 1, target = el[, 2] - 1)
+    } else if (any(class(object) == "network")) {
+        nodes <- data.frame(name = paste0("node", 0:(network::get.network.attribute(object, "n") - 1)), x = xy[, 1], y = xy[, 2])
+        el <- network::as.edgelist(object)
+        el1 <- data.frame(source = el[, 1] - 1, target = el[, 2] - 1)
+    } else {
+        stop("only `igraph`, `network` or `tbl_graph` objects supported.")
     }
-    object <- tidygraph::as.igraph(object)
-    nodes <- data.frame(name=paste0("node",0:(igraph::vcount(object)-1)),x=xy[,1],y=xy[,2])
-    el <- igraph::get.edgelist(object,names = FALSE)
-    el1 <- data.frame(source=el[,1]-1,target=el[,2]-1)
-
-  } else if(any(class(object)=="network")){
-    nodes <- data.frame(name=paste0("node",0:(network::get.network.attribute(object,"n")-1)),x=xy[,1],y=xy[,2])
-    el <- network::as.edgelist(object)
-    el1 <- data.frame(source=el[,1]-1,target=el[,2]-1)
-  } else{
-    stop("only `igraph`, `network` or `tbl_graph` objects supported.")
-  }
-  data_bundle <- shader_env$datashader_bundling$hammer_bundle(nodes,el1,initial_bandwidth = bw,decay = decay)
-  data_bundle$group <- is.na(data_bundle$y)+0
-  data_bundle$group <- cumsum(data_bundle$group)+1
-  data_bundle <- data_bundle[!is.na(data_bundle$y),]
-  data_bundle$index <- unlist(sapply(table(data_bundle$group),function(x) seq(0,1,length.out=x)))
-  data_bundle[,c("x","y","index","group")]
+    data_bundle <- shader_env$datashader_bundling$hammer_bundle(nodes, el1, initial_bandwidth = bw, decay = decay)
+    data_bundle$group <- is.na(data_bundle$y) + 0
+    data_bundle$group <- cumsum(data_bundle$group) + 1
+    data_bundle <- data_bundle[!is.na(data_bundle$y), ]
+    data_bundle$index <- unlist(sapply(table(data_bundle$group), function(x) seq(0, 1, length.out = x)))
+    data_bundle[, c("x", "y", "index", "group")]
 }
 
 #' @title install python dependencies for hammer bundling
@@ -60,17 +58,17 @@ edge_bundle_hammer <- function(object,xy,bw=0.05,decay=0.7){
 #' @export
 #'
 install_bundle_py <- function(method = "auto", conda = "auto") {
-  if (!requireNamespace('reticulate', quietly = TRUE)) {
-    stop('The `reticulate` package is required for this functionality')
-  }
-  reticulate::py_install("datashader", method = method, conda = conda, pip = TRUE)
-  reticulate::py_install("scikit-image", method = method, conda = conda, pip = TRUE)
+    if (!requireNamespace("reticulate", quietly = TRUE)) {
+        stop("The `reticulate` package is required for this functionality")
+    }
+    reticulate::py_install("datashader", method = method, conda = conda, pip = TRUE)
+    reticulate::py_install("scikit-image", method = method, conda = conda, pip = TRUE)
 }
 
 # Environment for globals
 shader_env <- new.env(parent = emptyenv())
 
 .onLoad <- function(libname, pkgname) {
-  reticulate::configure_environment(pkgname)
-  assign("datashader_bundling", reticulate::import("datashader.bundling", delay_load = TRUE), shader_env)
+    reticulate::configure_environment(pkgname)
+    assign("datashader_bundling", reticulate::import("datashader.bundling", delay_load = TRUE), shader_env)
 }

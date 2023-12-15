@@ -55,8 +55,8 @@ uses various sampling strategies to create dummy nodes for the \link{tnss_tree}
 }
 \examples{
 # dummy nodes for tree rooted in California
-xy <- cbind(state.center$x,state.center$y)
-xy_dummy <- tnss_dummies(xy,4)
+xy <- cbind(state.center$x, state.center$y)
+xy_dummy <- tnss_dummies(xy, 4)
 }
 \author{
 David Schoch

@@ -40,22 +40,22 @@ see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
 }
 \examples{
 library(igraph)
-g <- graph.star(10,"undirected")
+g <- graph.star(10, "undirected")
 
 xy <- matrix(c(
- 0,0,
- cos(90*pi/180),sin(90*pi/180),
- cos(80*pi/180),sin(80*pi/180),
- cos(70*pi/180),sin(70*pi/180),
- cos(330*pi/180),sin(330*pi/180),
- cos(320*pi/180),sin(320*pi/180),
- cos(310*pi/180),sin(310*pi/180),
- cos(210*pi/180),sin(210*pi/180),
- cos(200*pi/180),sin(200*pi/180),
- cos(190*pi/180),sin(190*pi/180)
-),ncol=2,byrow=TRUE)
+    0, 0,
+    cos(90 * pi / 180), sin(90 * pi / 180),
+    cos(80 * pi / 180), sin(80 * pi / 180),
+    cos(70 * pi / 180), sin(70 * pi / 180),
+    cos(330 * pi / 180), sin(330 * pi / 180),
+    cos(320 * pi / 180), sin(320 * pi / 180),
+    cos(310 * pi / 180), sin(310 * pi / 180),
+    cos(210 * pi / 180), sin(210 * pi / 180),
+    cos(200 * pi / 180), sin(200 * pi / 180),
+    cos(190 * pi / 180), sin(190 * pi / 180)
+), ncol = 2, byrow = TRUE)
 
-edge_bundle_stub(g,xy)
+edge_bundle_stub(g, xy)
 # use ggforce::geom_bezier for plotting
 }
 \references{

@@ -21,60 +21,58 @@
 #' # the algorithm has problems with parallel edges
 #' library(igraph)
 #' g <- simplify(metro_berlin)
-#' xy <- cbind(V(g)$lon,V(g)$lat)*100
+#' xy <- cbind(V(g)$lon, V(g)$lat) * 100
 #'
 #' # the algorithm is not very stable. try playing with the parameters
-#' xy_new <- metro_multicriteria(g,xy,l = 2,gr = 0.5,w = c(100,100,1,1,100),bsize = 35)
+#' xy_new <- metro_multicriteria(g, xy, l = 2, gr = 0.5, w = c(100, 100, 1, 1, 100), bsize = 35)
 #' @export
-metro_multicriteria <- function(object,xy,l = 2,gr = 0.0025,w = rep(1,5),bsize = 5){
-  n <- igraph::vcount(object)
-  # lg <- l*gr
-  adj <- as_adj_list1(object)
-  adj <- lapply(adj, function(x) x-1)
-  adj_deg2 <- adj[unlist(lapply(adj,length))==2]
-  el <- igraph::get.edgelist(object,FALSE) - 1
+metro_multicriteria <- function(object, xy, l = 2, gr = 0.0025, w = rep(1, 5), bsize = 5) {
+    adj <- as_adj_list1(object)
+    adj <- lapply(adj, function(x) x - 1)
+    adj_deg2 <- adj[unlist(lapply(adj, length)) == 2]
+    el <- igraph::get.edgelist(object, FALSE) - 1
 
-  xy <- snap_to_grid(xy,gr)
+    xy <- snap_to_grid(xy, gr)
 
-  bbox <- station_bbox(xy,bsize,gr)
+    bbox <- station_bbox(xy, bsize, gr)
 
-  xy_new <- layout_as_metro_iter(adj,el,adj_deg2,xy,bbox,l,gr,w,bsize)
-  xy_new
+    xy_new <- layout_as_metro_iter(adj, el, adj_deg2, xy, bbox, l, gr, w, bsize)
+    xy_new
 }
 
-#helper ----
-snap_to_grid <- function(xy,gr){
-  xmin <- min(xy[,1])
-  xmax <- max(xy[,1])
-  ymin <- min(xy[,2])
-  ymax <- max(xy[,2])
+# helper ----
+snap_to_grid <- function(xy, gr) {
+    xmin <- min(xy[, 1])
+    xmax <- max(xy[, 1])
+    ymin <- min(xy[, 2])
+    ymax <- max(xy[, 2])
 
-  deltax <- seq(xmin-4*gr,xmax+4*gr,by=gr)
-  deltay <- seq(ymin-4*gr,ymax+4*gr,by=gr)
+    deltax <- seq(xmin - 4 * gr, xmax + 4 * gr, by = gr)
+    deltay <- seq(ymin - 4 * gr, ymax + 4 * gr, by = gr)
 
-  xdiff <- outer(xy[,1],deltax,function(x,y) abs(x-y))
-  ydiff <- outer(xy[,2],deltay,function(x,y) abs(x-y))
+    xdiff <- outer(xy[, 1], deltax, function(x, y) abs(x - y))
+    ydiff <- outer(xy[, 2], deltay, function(x, y) abs(x - y))
 
-  xy_new <- cbind(deltax[apply(xdiff,1,which.min)],deltay[apply(ydiff,1,which.min)])
-  dups <- duplicated(xy_new)
-  while(any(dups)){
-    xy_new[which(dups),] <- xy_new[which(dups),] + c(sample(c(1,-1),1)*gr,sample(c(1,-1),1)*gr)
+    xy_new <- cbind(deltax[apply(xdiff, 1, which.min)], deltay[apply(ydiff, 1, which.min)])
     dups <- duplicated(xy_new)
-  }
-  xy_new
+    while (any(dups)) {
+        xy_new[which(dups), ] <- xy_new[which(dups), ] + c(sample(c(1, -1), 1) * gr, sample(c(1, -1), 1) * gr)
+        dups <- duplicated(xy_new)
+    }
+    xy_new
 }
 
-station_bbox <- function(xy,bsize,gr){
-  cbind(xy - bsize * gr,xy + bsize * gr)
+station_bbox <- function(xy, bsize, gr) {
+    cbind(xy - bsize * gr, xy + bsize * gr)
 }
 
-as_adj_list1 <- function(g){
-  n <- igraph::vcount(g)
-  lapply(1:n,function(i){
-    x <- g[[i]][[1]]
-    attr(x,"env") <- NULL
-    attr(x,"graph") <- NULL
-    class(x) <- NULL
-    x
-  })
+as_adj_list1 <- function(g) {
+    n <- igraph::vcount(g)
+    lapply(1:n, function(i) {
+        x <- g[[i]][[1]]
+        attr(x, "env") <- NULL
+        attr(x, "graph") <- NULL
+        class(x) <- NULL
+        x
+    })
 }

@@ -1,3 +1,7 @@
+# edgebundle 0.4.2
+
+* clean up codebase
+
 # edgebundle 0.4.1
 
 * added package level docs

@@ -30,9 +30,12 @@ see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
 }
 \examples{
 library(igraph)
-g  <- graph_from_edgelist(matrix(c(1,2,1,6,1,4,2,3,3,4,4,5,5,6),ncol = 2,byrow = TRUE),FALSE)
-xy <- cbind(c(0,10,25,40,50,50),c(0,15,25,15,0,-10))
-edge_bundle_path(g,xy)
+g <- graph_from_edgelist(matrix(c(
+    1, 2, 1, 6,
+    1, 4, 2, 3, 3, 4, 4, 5, 5, 6
+), ncol = 2, byrow = TRUE), FALSE)
+xy <- cbind(c(0, 10, 25, 40, 50, 50), c(0, 15, 25, 15, 0, -10))
+edge_bundle_path(g, xy)
 }
 \references{
 Wallinger, M., Archambault, D., Auber, D., Nollenburg, M., & Peltonen, J. (2021). Edge-Path Bundling: A Less Ambiguous Edge Bundling Approach. IEEE Transactions on Visualization and Computer Graphics.

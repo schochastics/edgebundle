@@ -42,9 +42,9 @@ creates an approximated Steiner tree for a flow map visualization
 Use \link{tnss_smooth} to smooth the edges of the tree
 }
 \examples{
-xy <- cbind(state.center$x,state.center$y)[!state.name\%in\%c("Alaska","Hawaii"),]
-xy_dummy <- tnss_dummies(xy,root = 4)
-gtree <- tnss_tree(cali2010,xy,xy_dummy,root = 4,gamma = 0.9)
+xy <- cbind(state.center$x, state.center$y)[!state.name \%in\% c("Alaska", "Hawaii"), ]
+xy_dummy <- tnss_dummies(xy, root = 4)
+gtree <- tnss_tree(cali2010, xy, xy_dummy, root = 4, gamma = 0.9)
 }
 \references{
 Sun, Shipeng. "An automated spatial flow layout algorithm using triangulation, approximate Steiner tree, and path smoothing." AutoCarto, 2016.
