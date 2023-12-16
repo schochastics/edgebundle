@@ -1,11 +1,11 @@
 citHeader("To cite edgebundle in publications use:")
 
-citEntry(
-  entry    = "Manual",
+bibentry(
+  bibtype    = "Manual",
   title    = "edgebundle: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps",
   author   = as.person("David Schoch"),
-  note     = "R package version 0.4.1",
-  year     = "2022",
+  note     = "R package version 0.4.2",
+  year     = "2023",
   url      = "https://github.com/schochastics/edgebundle",
-  textVersion = "Schoch David (2022) edgebundle: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps. R package version 0.4.1, <https://github.com/schochastics/edgebundle>"
+  textVersion = "Schoch David (2023) edgebundle: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps. R package version 0.4.1, <https://github.com/schochastics/edgebundle>"
 )
