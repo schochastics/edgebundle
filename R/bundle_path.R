@@ -6,6 +6,8 @@
 #' @param max_distortion maximum distortion
 #' @param weight_fac edge weight factor
 #' @param segments number of subdivisions of edges
+#' @param bundle_strength bundle strength factor
+#' @param mode the parameter fo shortest_paths
 #' @return data.frame containing the bundled edges
 #' @author David Schoch
 #' @details see [online](https://github.com/schochastics/edgebundle) for plotting tips
@@ -22,7 +24,8 @@
 #' edge_bundle_path(g, xy)
 #' @export
 
-edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments = 20) {
+edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments = 20,
+    bundle_strength = 1, mode = "out") {
     # preprocess
     if (!igraph::is.igraph(g)) {
         stop("edge_bundle_path requires the input graph to be an ingraph object")
@@ -50,7 +53,7 @@ edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments
         }
         skip[e] <- TRUE
         g1 <- igraph::delete.edges(g, which(skip))
-        sp_verts <- suppressWarnings(igraph::shortest_paths(g1, s, t, weights = weights[!skip])$vpath[[1]])
+        sp_verts <- suppressWarnings(igraph::shortest_paths(g1, s, t, weights = weights[!skip], mode=mode)$vpath[[1]])
         if (length(sp_verts) < 2) {
             skip[e] <- FALSE
             next
@@ -63,6 +66,7 @@ edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments
         lock[igraph::get.edge.ids(g, rep(as.integer(sp_verts), each = 2)[-c(1, 2 * length(sp_verts))])] <- TRUE
         cpoints[[e]] <- xy[sp_verts, ]
     }
+    cpoints <- lapply(cpoints, subdivide, bs = bundle_strength)
     cpoints_bezier <- lapply(cpoints, approximateBezier, n = segments)
 
     idx <- seq(0, 1, length.out = segments)
@@ -83,6 +87,22 @@ path_length <- function(verts, xy) {
         plen <- plen + sqrt((xy[i, 1] - xy[i + 1, 1])^2 + (xy[i, 2] - xy[i + 1, 2])^2)
     }
     plen
+}
+
+subdivide <- function(points, bs) {
+    for (i in seq_len(bs-1)) {
+        pnrow <- nrow(points)
+        newCP <- points[1,]
+        for (j in 1:(pnrow-1)) {
+            p1 <- points[j,]
+            p2 <- points[j+1,]
+            p3 <- (p1+p2)/2
+            newCP <- rbind(newCP, p3)
+            newCP <- rbind(newCP, p2)
+        }
+        points <- newCP
+    }
+    return(points)
 }
 
 approximateBezier <- function(points, n) {

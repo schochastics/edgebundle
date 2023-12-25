@@ -4,7 +4,15 @@
 \alias{edge_bundle_path}
 \title{Edge-Path Bundling}
 \usage{
-edge_bundle_path(g, xy, max_distortion = 2, weight_fac = 2, segments = 20)
+edge_bundle_path(
+  g,
+  xy,
+  max_distortion = 2,
+  weight_fac = 2,
+  segments = 20,
+  bundle_strength = 1,
+  mode = "out"
+)
 }
 \arguments{
 \item{g}{an igraph object}
@@ -16,6 +24,10 @@ edge_bundle_path(g, xy, max_distortion = 2, weight_fac = 2, segments = 20)
 \item{weight_fac}{edge weight factor}
 
 \item{segments}{number of subdivisions of edges}
+
+\item{bundle_strength}{bundle strength factor}
+
+\item{mode}{the parameter fo shortest_paths}
 }
 \value{
 data.frame containing the bundled edges
