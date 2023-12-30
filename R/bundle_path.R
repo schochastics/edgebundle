@@ -53,7 +53,7 @@ edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments
         }
         skip[e] <- TRUE
         g1 <- igraph::delete.edges(g, which(skip))
-        sp_verts <- suppressWarnings(igraph::shortest_paths(g1, s, t, weights = weights[!skip], mode=mode)$vpath[[1]])
+        sp_verts <- suppressWarnings(igraph::shortest_paths(g1, s, t, weights = weights[!skip], mode = mode)$vpath[[1]])
         if (length(sp_verts) < 2) {
             skip[e] <- FALSE
             next
@@ -90,13 +90,13 @@ path_length <- function(verts, xy) {
 }
 
 subdivide <- function(points, bs) {
-    for (i in seq_len(bs-1)) {
+    for (i in seq_len(bs - 1)) {
         pnrow <- nrow(points)
-        newCP <- points[1,]
-        for (j in 1:(pnrow-1)) {
+        newCP <- points[1, ]
+        for (j in 1:(pnrow - 1)) {
             p1 <- points[j,]
-            p2 <- points[j+1,]
-            p3 <- (p1+p2)/2
+            p2 <- points[j + 1,]
+            p3 <- (p1 + p2) / 2
             newCP <- rbind(newCP, p3)
             newCP <- rbind(newCP, p2)
         }
