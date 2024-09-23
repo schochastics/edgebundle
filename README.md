@@ -9,22 +9,21 @@
 [![CRAN
 status](https://www.r-pkg.org/badges/version/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
 [![CRAN
-Downloads](http://cranlogs.r-pkg.org/badges/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
+Downloads](https://cranlogs.r-pkg.org/badges/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
 <!-- badges: end -->
 
 An R package that implements several edge bundling/flow and metro map
 algorithms. So far it includes
 
--   Force directed edge bundling
--   Stub bundling
-    ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
--   Hammer bundling ([python
-    code](https://datashader.org/_modules/datashader/bundling.html))
--   Edge-path bundling ([paper](https://arxiv.org/abs/2108.05467))
--   TNSS flow map
-    ([paper](https://doi.org/10.1080/15230406.2018.1437359))
--   Multicriteria Metro map layout
-    ([paper](https://doi.org/10.1109/TVCG.2010.24))
+- Force directed edge bundling
+- Stub bundling
+  ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
+- Hammer bundling ([python
+  code](https://datashader.org/_modules/datashader/bundling.html))
+- Edge-path bundling ([paper](https://arxiv.org/abs/2108.05467))
+- TNSS flow map ([paper](https://doi.org/10.1080/15230406.2018.1437359))
+- Multicriteria Metro map layout
+  ([paper](https://doi.org/10.1109/TVCG.2010.24))
 
 **[ggraph
 2.2.0](https://www.data-imaginist.com/posts/2024-02-15-ggraph-2-2-0/)
@@ -71,13 +70,13 @@ xy <- cbind(c(rep(0, 6), rep(1, 6)), c(1:6, 1:6))
 
 fbundle <- edge_bundle_force(g, xy, compatibility_threshold = 0.1)
 head(fbundle)
-#>            x       y     index group
-#> 1 0.00000000 1.00000 0.0000000     1
-#> 2 0.00611816 1.19977 0.0303030     1
-#> 3 0.00987237 1.29767 0.0606061     1
-#> 4 0.01929293 1.52427 0.0909091     1
-#> 5 0.02790686 1.68643 0.1212121     1
-#> 6 0.03440142 1.81285 0.1515152     1
+#>            x        y      index group
+#> 1 0.00000000 1.000000 0.00000000     1
+#> 2 0.00611816 1.199768 0.03030303     1
+#> 3 0.00987237 1.297670 0.06060606     1
+#> 4 0.01929293 1.524269 0.09090909     1
+#> 5 0.02790686 1.686429 0.12121212     1
+#> 6 0.03440142 1.812852 0.15151515     1
 ```
 
 The result can be visualized as follows.
@@ -94,13 +93,13 @@ ggplot(fbundle) +
 #> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 #> ℹ Please use `linewidth` instead.
 #> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was
-#> generated.
+#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 ```
 
 <img src="man/figures/README-plot-1.png" width="100%" style="display: block; margin: auto;" />
 
 ``` r
+
 # simple edge-path bundling example
 g <- graph_from_edgelist(matrix(c(1, 2, 1, 6, 1, 4, 2, 3, 3, 4, 4, 5, 5, 6),
     ncol = 2, byrow = TRUE

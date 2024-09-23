@@ -19,7 +19,7 @@ library(edgebundle)
 <!-- badges: start -->
 [![R-CMD-check](https://github.com/schochastics/edgebundle/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/schochastics/edgebundle/actions/workflows/R-CMD-check.yaml)
 [![CRAN status](https://www.r-pkg.org/badges/version/edgebundle)](https://CRAN.R-project.org/package=edgebundle)
-[![CRAN Downloads](http://cranlogs.r-pkg.org/badges/edgebundle)](https://CRAN.R-project.org/package=edgebundle) 
+[![CRAN Downloads](https://cranlogs.r-pkg.org/badges/edgebundle)](https://CRAN.R-project.org/package=edgebundle) 
 <!-- badges: end -->
 
 An R package that implements several edge bundling/flow and metro map algorithms. So far it includes
