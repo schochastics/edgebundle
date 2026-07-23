@@ -53,6 +53,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// kdeeb_iter
+List kdeeb_iter(NumericMatrix edges_xy, int npoints, int niter, double bw, double decay, int grid, double step, int smooth_passes);
+RcppExport SEXP _edgebundle_kdeeb_iter(SEXP edges_xySEXP, SEXP npointsSEXP, SEXP niterSEXP, SEXP bwSEXP, SEXP decaySEXP, SEXP gridSEXP, SEXP stepSEXP, SEXP smooth_passesSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type edges_xy(edges_xySEXP);
+    Rcpp::traits::input_parameter< int >::type npoints(npointsSEXP);
+    Rcpp::traits::input_parameter< int >::type niter(niterSEXP);
+    Rcpp::traits::input_parameter< double >::type bw(bwSEXP);
+    Rcpp::traits::input_parameter< double >::type decay(decaySEXP);
+    Rcpp::traits::input_parameter< int >::type grid(gridSEXP);
+    Rcpp::traits::input_parameter< double >::type step(stepSEXP);
+    Rcpp::traits::input_parameter< int >::type smooth_passes(smooth_passesSEXP);
+    rcpp_result_gen = Rcpp::wrap(kdeeb_iter(edges_xy, npoints, niter, bw, decay, grid, step, smooth_passes));
+    return rcpp_result_gen;
+END_RCPP
+}
 // criterion_angular_resolution
 double criterion_angular_resolution(List adj, NumericMatrix xy);
 RcppExport SEXP _edgebundle_criterion_angular_resolution(SEXP adjSEXP, SEXP xySEXP) {
@@ -135,6 +153,7 @@ END_RCPP
 static const R_CallMethodDef CallEntries[] = {
     {"_edgebundle_divided_bundle_iter", (DL_FUNC) &_edgebundle_divided_bundle_iter, 13},
     {"_edgebundle_force_bundle_iter", (DL_FUNC) &_edgebundle_force_bundle_iter, 10},
+    {"_edgebundle_kdeeb_iter", (DL_FUNC) &_edgebundle_kdeeb_iter, 8},
     {"_edgebundle_criterion_angular_resolution", (DL_FUNC) &_edgebundle_criterion_angular_resolution, 2},
     {"_edgebundle_criterion_edge_length", (DL_FUNC) &_edgebundle_criterion_edge_length, 3},
     {"_edgebundle_criterion_balanced_edge_length", (DL_FUNC) &_edgebundle_criterion_balanced_edge_length, 2},

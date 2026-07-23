@@ -21,10 +21,9 @@ LazyData: true
 Roxygen: list(markdown = TRUE)
 LinkingTo: 
     Rcpp
-Imports: 
+Imports:
     Rcpp,
     igraph,
-    reticulate,
     interp
 Depends: 
     R (>= 3.5)

@@ -1,74 +1,41 @@
 #' @title hammer edge bundling
-#' @description Implements the hammer edge bundling by Ian Calvert.
-#' @details This function only wraps existing python code from the datashader library. Original code can be found at https://gitlab.com/ianjcalvert/edgehammer.
-#' Datashader is a huge library with a lot of dependencies, so think twice if you want to install it just for edge bundling.
-#' Check https://datashader.org/user_guide/Networks.html for help concerning parameters bw and decay.
-#' To install all dependencies, use [install_bundle_py].
+#' @description Implements hammer edge bundling via kernel density estimation (KDEEB).
+#' @details Native re-implementation of the KDE-based bundling behind the
+#' datashader "hammer" bundler, following Hurter, Ersoy and Telea (2012). Earlier
+#' versions of this function wrapped datashader through `reticulate`; it now runs
+#' entirely in C++ with no Python dependency. Edges are sampled into points, a
+#' density field is estimated on a grid, points are advected up the density
+#' gradient, and the bandwidth shrinks each iteration so bundles emerge along
+#' density ridges.
 #' @param object a graph object (igraph/network/tbl_graph)
 #' @param xy coordinates of vertices
-#' @param bw bandwidth parameter
-#' @param decay decay parameter
+#' @param bw initial bandwidth (fraction of the layout extent)
+#' @param decay bandwidth decay per iteration (0-1)
+#' @param npoints number of points sampled per edge
+#' @param iterations number of bundling iterations
+#' @param grid resolution of the density grid
+#' @param step advection step size (multiple of the bandwidth)
+#' @param smooth number of smoothing passes per iteration
 #' @return data.frame containing the bundled edges
 #' @author David Schoch
 #' @details see [online](https://github.com/schochastics/edgebundle) for plotting tips
 #' @seealso [edge_bundle_force],[edge_bundle_stub], [edge_bundle_path]
+#' @references
+#' Hurter, Christophe, Ozan Ersoy, and Alexandru Telea. "Graph Bundling by Kernel Density Estimation." Computer Graphics Forum 31, no. 3 (2012): 865-874.
+#' @examples
+#' library(igraph)
+#' g <- graph_from_edgelist(
+#'     matrix(c(1, 12, 2, 11, 3, 10, 4, 9, 5, 8, 6, 7), ncol = 2, byrow = TRUE), FALSE
+#' )
+#' xy <- cbind(c(rep(0, 6), rep(1, 6)), c(1:6, 1:6))
+#' edge_bundle_hammer(g, xy)
 #' @export
+edge_bundle_hammer <- function(object, xy, bw = 0.05, decay = 0.7, npoints = 50,
+                               iterations = 12, grid = 256, step = 0.6, smooth = 1) {
+    edges_xy <- .bundle_inputs(object, xy)$exy
+    m <- nrow(edges_xy)
 
-edge_bundle_hammer <- function(object, xy, bw = 0.05, decay = 0.7) {
-    if (!requireNamespace("reticulate", quietly = TRUE)) {
-        stop("The `reticulate` package is required for this functionality")
-    }
-    if (any(class(object) == "igraph")) {
-        if (!requireNamespace("igraph", quietly = TRUE)) {
-            stop("The `igraph` package is required for this functionality")
-        }
-        nodes <- data.frame(name = paste0("node", 0:(igraph::vcount(object) - 1)), x = xy[, 1], y = xy[, 2])
-        el <- igraph::as_edgelist(object, names = FALSE)
-        el1 <- data.frame(source = el[, 1] - 1, target = el[, 2] - 1)
-    } else if (any(class(object) == "tbl_graph")) {
-        if (!requireNamespace("tidygraph", quietly = TRUE)) {
-            stop("The `tidygraph` package is required for this functionality")
-        }
-        object <- tidygraph::as.igraph(object)
-        nodes <- data.frame(name = paste0("node", 0:(igraph::vcount(object) - 1)), x = xy[, 1], y = xy[, 2])
-        el <- igraph::as_edgelist(object, names = FALSE)
-        el1 <- data.frame(source = el[, 1] - 1, target = el[, 2] - 1)
-    } else if (any(class(object) == "network")) {
-        nodes <- data.frame(name = paste0("node", 0:(network::get.network.attribute(object, "n") - 1)), x = xy[, 1], y = xy[, 2])
-        el <- network::as.edgelist(object)
-        el1 <- data.frame(source = el[, 1] - 1, target = el[, 2] - 1)
-    } else {
-        stop("only `igraph`, `network` or `tbl_graph` objects supported.")
-    }
-    data_bundle <- shader_env$datashader_bundling$hammer_bundle(nodes, el1, initial_bandwidth = bw, decay = decay)
-    data_bundle$group <- is.na(data_bundle$y) + 0
-    data_bundle$group <- cumsum(data_bundle$group) + 1
-    data_bundle <- data_bundle[!is.na(data_bundle$y), ]
-    data_bundle$index <- unlist(sapply(table(data_bundle$group), function(x) seq(0, 1, length.out = x)))
-    data_bundle[, c("x", "y", "index", "group")]
-}
+    elist <- kdeeb_iter(edges_xy, npoints, iterations, bw, decay, grid, step, smooth)
 
-#' @title install python dependencies for hammer bundling
-#' @description install datashader and scikit-image
-#' @param method Installation method (by default, "auto" automatically finds a
-#' method that will work in the local environment, but note that the
-#' "virtualenv" method is not available on Windows)
-#' @param conda Path to conda executable (or "auto" to find conda using the PATH
-#' and other conventional install locations)
-#' @export
-#'
-install_bundle_py <- function(method = "auto", conda = "auto") {
-    if (!requireNamespace("reticulate", quietly = TRUE)) {
-        stop("The `reticulate` package is required for this functionality")
-    }
-    reticulate::py_install("datashader", method = method, conda = conda, pip = TRUE)
-    reticulate::py_install("scikit-image", method = method, conda = conda, pip = TRUE)
-}
-
-# Environment for globals
-shader_env <- new.env(parent = emptyenv())
-
-.onLoad <- function(libname, pkgname) {
-    reticulate::configure_environment(pkgname)
-    assign("datashader_bundling", reticulate::import("datashader.bundling", delay_load = TRUE), shader_env)
+    .as_bundle_df(do.call("rbind", elist), m, npoints)
 }
