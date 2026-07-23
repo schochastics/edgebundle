@@ -37,6 +37,7 @@
 <code><a href="../reference/edge_bundle_force.html">edge_bundle_force()</a></code> now also accepts a two-column edgelist matrix</li>
 <li>fixed <code><a href="../reference/edge_bundle_stub.html">edge_bundle_stub()</a></code>: the angular grouping was broken (wrong circular-gap handling and a bundle-size cap that summed cluster ids instead of counting edges) and vertical edges could produce <code>NaN</code>. Bundling output changes as a result</li>
 <li>fixed <code><a href="../reference/edge_bundle_path.html">edge_bundle_path()</a></code>: the path-length used in the distortion test was computed along the wrong vertices, so edges were essentially never routed. Bundling output changes as a result</li>
+<li>added divided edge bundling for directed graphs via <code>edge_bundle_force(directed = TRUE)</code> (Selassie et al. 2011): edges running in opposite directions are kept in separate lanes</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="edgebundle-042">edgebundle 0.4.2<a class="anchor" aria-label="anchor" href="#edgebundle-042"></a></h2><p class="text-muted">CRAN release: 2023-12-16</p>

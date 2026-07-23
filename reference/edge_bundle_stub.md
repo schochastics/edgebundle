@@ -75,9 +75,7 @@ David Schoch
 
 ``` r
 library(igraph)
-g <- graph.star(10, "undirected")
-#> Warning: `graph.star()` was deprecated in igraph 2.1.0.
-#> ℹ Please use `make_star()` instead.
+g <- make_star(10, "undirected")
 
 xy <- matrix(c(
     0, 0,

@@ -47,7 +47,9 @@
 <span>  I <span class="op">=</span> <span class="fl">50</span>,</span>
 <span>  I_rate <span class="op">=</span> <span class="fl">2</span><span class="op">/</span><span class="fl">3</span>,</span>
 <span>  compatibility_threshold <span class="op">=</span> <span class="fl">0.6</span>,</span>
-<span>  eps <span class="op">=</span> <span class="fl">1e-08</span></span>
+<span>  eps <span class="op">=</span> <span class="fl">1e-08</span>,</span>
+<span>  directed <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  <span class="va">...</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -98,6 +100,18 @@
 <dt id="arg-eps">eps<a class="anchor" aria-label="anchor" href="#arg-eps"></a></dt>
 <dd><p>accuracy</p></dd>
 
+
+<dt id="arg-directed">directed<a class="anchor" aria-label="anchor" href="#arg-directed"></a></dt>
+<dd><p>logical. If <code>TRUE</code>, use divided edge bundling (Selassie et al.
+2011) which keeps edges running in opposite directions in separate lanes.
+Requires an igraph/tbl_graph object with edge directions.</p></dd>
+
+
+<dt id="arg--">...<a class="anchor" aria-label="anchor" href="#arg--"></a></dt>
+<dd><p>arguments passed to the divided bundler when <code>directed = TRUE</code>:
+<code>lane_width</code>, <code>k_spring</code>, <code>k_charge</code>, <code>decay</code>, <code>friction</code>, <code>step</code>, <code>passes</code>,
+<code>iterations</code>, <code>use_connectivity</code>.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -111,6 +125,7 @@
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>
     <p>Holten, Danny, and Jarke J. Van Wijk. "Force-Directed Edge Bundling for Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd) 28, no. 3 (2009): 983-990.</p>
+<p>Selassie, David, Brandon Heller, and Jeffrey Heer. "Divided edge bundling for directional network data." IEEE Transactions on Visualization and Computer Graphics 17, no. 12 (2011): 2354-2363.</p>
     </div>
     <div class="section level2">
     <h2 id="see-also">See also<a class="anchor" aria-label="anchor" href="#see-also"></a></h2>

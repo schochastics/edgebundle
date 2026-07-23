@@ -19,6 +19,9 @@
   the path-length used in the distortion test was computed along the
   wrong vertices, so edges were essentially never routed. Bundling
   output changes as a result
+- added divided edge bundling for directed graphs via
+  `edge_bundle_force(directed = TRUE)` (Selassie et al. 2011): edges
+  running in opposite directions are kept in separate lanes
 
 ## edgebundle 0.4.2
 
