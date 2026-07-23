@@ -37,3 +37,7 @@ layout_as_metro_iter <- function(adj, el, adj_deg2, xy, bbox, l, gr, w, bsize) {
     .Call(`_edgebundle_layout_as_metro_iter`, adj, el, adj_deg2, xy, bbox, l, gr, w, bsize)
 }
 
+mingle_iter <- function(edges_xy, k, segments, bundle_strength) {
+    .Call(`_edgebundle_mingle_iter`, edges_xy, k, segments, bundle_strength)
+}
+
