@@ -1,3 +1,7 @@
+# edgebundle (development version)
+
+* switched the test suite to testthat edition 3 and added correctness tests for every exported function
+
 # edgebundle 0.4.2
 
 * clean up codebase

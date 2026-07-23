@@ -11,11 +11,11 @@ Description: Implements several algorithms for bundling edges in networks and fl
 URL: https://github.com/schochastics/edgebundle, https://schochastics.github.io/edgebundle/
 BugReports: https://github.com/schochastics/edgebundle/issues
 License: MIT + file LICENSE
-Suggests: 
-    testthat (>= 2.0.0),
+Suggests:
+    testthat (>= 3.0.0),
     network,
     tidygraph
-Config/testthat/edition: 2
+Config/testthat/edition: 3
 Encoding: UTF-8
 LazyData: true
 Roxygen: list(markdown = TRUE)
