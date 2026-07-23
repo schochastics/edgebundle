@@ -4,30 +4,64 @@
 \alias{edge_bundle_hammer}
 \title{hammer edge bundling}
 \usage{
-edge_bundle_hammer(object, xy, bw = 0.05, decay = 0.7)
+edge_bundle_hammer(
+  object,
+  xy,
+  bw = 0.05,
+  decay = 0.7,
+  npoints = 50,
+  iterations = 12,
+  grid = 256,
+  step = 0.6,
+  smooth = 1
+)
 }
 \arguments{
 \item{object}{a graph object (igraph/network/tbl_graph)}
 
 \item{xy}{coordinates of vertices}
 
-\item{bw}{bandwidth parameter}
+\item{bw}{initial bandwidth (fraction of the layout extent)}
 
-\item{decay}{decay parameter}
+\item{decay}{bandwidth decay per iteration (0-1)}
+
+\item{npoints}{number of points sampled per edge}
+
+\item{iterations}{number of bundling iterations}
+
+\item{grid}{resolution of the density grid}
+
+\item{step}{advection step size (multiple of the bandwidth)}
+
+\item{smooth}{number of smoothing passes per iteration}
 }
 \value{
 data.frame containing the bundled edges
 }
 \description{
-Implements the hammer edge bundling by Ian Calvert.
+Implements hammer edge bundling via kernel density estimation (KDEEB).
 }
 \details{
-This function only wraps existing python code from the datashader library. Original code can be found at https://gitlab.com/ianjcalvert/edgehammer.
-Datashader is a huge library with a lot of dependencies, so think twice if you want to install it just for edge bundling.
-Check https://datashader.org/user_guide/Networks.html for help concerning parameters bw and decay.
-To install all dependencies, use \link{install_bundle_py}.
+Native re-implementation of the KDE-based bundling behind the
+datashader "hammer" bundler, following Hurter, Ersoy and Telea (2012). Earlier
+versions of this function wrapped datashader through \code{reticulate}; it now runs
+entirely in C++ with no Python dependency. Edges are sampled into points, a
+density field is estimated on a grid, points are advected up the density
+gradient, and the bandwidth shrinks each iteration so bundles emerge along
+density ridges.
 
 see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
+}
+\examples{
+library(igraph)
+g <- graph_from_edgelist(
+    matrix(c(1, 12, 2, 11, 3, 10, 4, 9, 5, 8, 6, 7), ncol = 2, byrow = TRUE), FALSE
+)
+xy <- cbind(c(rep(0, 6), rep(1, 6)), c(1:6, 1:6))
+edge_bundle_hammer(g, xy)
+}
+\references{
+Hurter, Christophe, Ozan Ersoy, and Alexandru Telea. "Graph Bundling by Kernel Density Estimation." Computer Graphics Forum 31, no. 3 (2012): 865-874.
 }
 \seealso{
 \link{edge_bundle_force},\link{edge_bundle_stub}, \link{edge_bundle_path}

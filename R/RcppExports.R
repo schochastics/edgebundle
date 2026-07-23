@@ -9,6 +9,10 @@ force_bundle_iter <- function(edges_xy, K, C, P, P_rate, S, I, I_rate, compatibi
     .Call(`_edgebundle_force_bundle_iter`, edges_xy, K, C, P, P_rate, S, I, I_rate, compatibility_threshold, eps)
 }
 
+kdeeb_iter <- function(edges_xy, npoints, niter, bw, decay, grid, step, smooth_passes) {
+    .Call(`_edgebundle_kdeeb_iter`, edges_xy, npoints, niter, bw, decay, grid, step, smooth_passes)
+}
+
 criterion_angular_resolution <- function(adj, xy) {
     .Call(`_edgebundle_criterion_angular_resolution`, adj, xy)
 }
