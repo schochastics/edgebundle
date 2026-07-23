@@ -8,6 +8,17 @@
   warnings
 - [`edge_bundle_force()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_force.md)
   now also accepts a two-column edgelist matrix
+- fixed
+  [`edge_bundle_stub()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_stub.md):
+  the angular grouping was broken (wrong circular-gap handling and a
+  bundle-size cap that summed cluster ids instead of counting edges) and
+  vertical edges could produce `NaN`. Bundling output changes as a
+  result
+- fixed
+  [`edge_bundle_path()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_path.md):
+  the path-length used in the distortion test was computed along the
+  wrong vertices, so edges were essentially never routed. Bundling
+  output changes as a result
 
 ## edgebundle 0.4.2
 
