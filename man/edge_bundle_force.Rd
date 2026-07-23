@@ -15,7 +15,9 @@ edge_bundle_force(
   I = 50,
   I_rate = 2/3,
   compatibility_threshold = 0.6,
-  eps = 1e-08
+  eps = 1e-08,
+  directed = FALSE,
+  ...
 )
 }
 \arguments{
@@ -40,6 +42,14 @@ edge_bundle_force(
 \item{compatibility_threshold}{threshold for when edges are considered compatible}
 
 \item{eps}{accuracy}
+
+\item{directed}{logical. If \code{TRUE}, use divided edge bundling (Selassie et al.
+2011) which keeps edges running in opposite directions in separate lanes.
+Requires an igraph/tbl_graph object with edge directions.}
+
+\item{...}{arguments passed to the divided bundler when \code{directed = TRUE}:
+\code{lane_width}, \code{k_spring}, \code{k_charge}, \code{decay}, \code{friction}, \code{step}, \code{passes},
+\code{iterations}, \code{use_connectivity}.}
 }
 \value{
 data.frame containing the bundled edges
@@ -65,6 +75,8 @@ edge_bundle_force(g, xy)
 }
 \references{
 Holten, Danny, and Jarke J. Van Wijk. "Force-Directed Edge Bundling for Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd) 28, no. 3 (2009): 983-990.
+
+Selassie, David, Brandon Heller, and Jeffrey Heer. "Divided edge bundling for directional network data." IEEE Transactions on Visualization and Computer Graphics 17, no. 12 (2011): 2354-2363.
 }
 \seealso{
 \link{edge_bundle_hammer},\link{edge_bundle_stub},\link{edge_bundle_path}

@@ -10,6 +10,29 @@ Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
 Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
+// divided_bundle_iter
+List divided_bundle_iter(NumericMatrix edges_xy, IntegerMatrix el, NumericMatrix node_dist, NumericVector weight, double ks, double kC, double l, double s, double f, double dt, int npass, int nstep, bool use_connectivity);
+RcppExport SEXP _edgebundle_divided_bundle_iter(SEXP edges_xySEXP, SEXP elSEXP, SEXP node_distSEXP, SEXP weightSEXP, SEXP ksSEXP, SEXP kCSEXP, SEXP lSEXP, SEXP sSEXP, SEXP fSEXP, SEXP dtSEXP, SEXP npassSEXP, SEXP nstepSEXP, SEXP use_connectivitySEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type edges_xy(edges_xySEXP);
+    Rcpp::traits::input_parameter< IntegerMatrix >::type el(elSEXP);
+    Rcpp::traits::input_parameter< NumericMatrix >::type node_dist(node_distSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type weight(weightSEXP);
+    Rcpp::traits::input_parameter< double >::type ks(ksSEXP);
+    Rcpp::traits::input_parameter< double >::type kC(kCSEXP);
+    Rcpp::traits::input_parameter< double >::type l(lSEXP);
+    Rcpp::traits::input_parameter< double >::type s(sSEXP);
+    Rcpp::traits::input_parameter< double >::type f(fSEXP);
+    Rcpp::traits::input_parameter< double >::type dt(dtSEXP);
+    Rcpp::traits::input_parameter< int >::type npass(npassSEXP);
+    Rcpp::traits::input_parameter< int >::type nstep(nstepSEXP);
+    Rcpp::traits::input_parameter< bool >::type use_connectivity(use_connectivitySEXP);
+    rcpp_result_gen = Rcpp::wrap(divided_bundle_iter(edges_xy, el, node_dist, weight, ks, kC, l, s, f, dt, npass, nstep, use_connectivity));
+    return rcpp_result_gen;
+END_RCPP
+}
 // force_bundle_iter
 List force_bundle_iter(NumericMatrix edges_xy, double K, int C, int P, int P_rate, double S, int I, double I_rate, double compatibility_threshold, double eps);
 RcppExport SEXP _edgebundle_force_bundle_iter(SEXP edges_xySEXP, SEXP KSEXP, SEXP CSEXP, SEXP PSEXP, SEXP P_rateSEXP, SEXP SSEXP, SEXP ISEXP, SEXP I_rateSEXP, SEXP compatibility_thresholdSEXP, SEXP epsSEXP) {
@@ -110,6 +133,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
+    {"_edgebundle_divided_bundle_iter", (DL_FUNC) &_edgebundle_divided_bundle_iter, 13},
     {"_edgebundle_force_bundle_iter", (DL_FUNC) &_edgebundle_force_bundle_iter, 10},
     {"_edgebundle_criterion_angular_resolution", (DL_FUNC) &_edgebundle_criterion_angular_resolution, 2},
     {"_edgebundle_criterion_edge_length", (DL_FUNC) &_edgebundle_criterion_edge_length, 3},

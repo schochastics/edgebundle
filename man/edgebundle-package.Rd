@@ -29,5 +29,10 @@ Useful links:
 \author{
 \strong{Maintainer}: David Schoch \email{david@schochastics.net} (\href{https://orcid.org/0000-0003-2952-4812}{ORCID})
 
+Authors:
+\itemize{
+  \item David Schoch \email{david@schochastics.net} (\href{https://orcid.org/0000-0003-2952-4812}{ORCID})
+}
+
 }
 \keyword{internal}
