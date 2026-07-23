@@ -149,6 +149,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// mingle_iter
+List mingle_iter(NumericMatrix edges_xy, int k, int segments, double bundle_strength);
+RcppExport SEXP _edgebundle_mingle_iter(SEXP edges_xySEXP, SEXP kSEXP, SEXP segmentsSEXP, SEXP bundle_strengthSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< NumericMatrix >::type edges_xy(edges_xySEXP);
+    Rcpp::traits::input_parameter< int >::type k(kSEXP);
+    Rcpp::traits::input_parameter< int >::type segments(segmentsSEXP);
+    Rcpp::traits::input_parameter< double >::type bundle_strength(bundle_strengthSEXP);
+    rcpp_result_gen = Rcpp::wrap(mingle_iter(edges_xy, k, segments, bundle_strength));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_edgebundle_divided_bundle_iter", (DL_FUNC) &_edgebundle_divided_bundle_iter, 13},
@@ -160,6 +174,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_edgebundle_criterion_line_straightness", (DL_FUNC) &_edgebundle_criterion_line_straightness, 0},
     {"_edgebundle_criterion_octilinearity", (DL_FUNC) &_edgebundle_criterion_octilinearity, 2},
     {"_edgebundle_layout_as_metro_iter", (DL_FUNC) &_edgebundle_layout_as_metro_iter, 9},
+    {"_edgebundle_mingle_iter", (DL_FUNC) &_edgebundle_mingle_iter, 4},
     {NULL, NULL, 0}
 };
 

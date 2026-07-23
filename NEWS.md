@@ -7,6 +7,7 @@
 * fixed `edge_bundle_path()`: the path-length used in the distortion test was computed along the wrong vertices, so edges were essentially never routed. Bundling output changes as a result
 * added divided edge bundling for directed graphs via `edge_bundle_force(directed = TRUE)` (Selassie et al. 2011): edges running in opposite directions are kept in separate lanes
 * `edge_bundle_hammer()` is now a native C++ implementation of KDE edge bundling (Hurter et al. 2012) and no longer depends on Python/`reticulate`/datashader. `reticulate` was dropped from Imports and `install_bundle_py()` was removed. Bundling output differs from the datashader-based version
+* added `edge_bundle_mingle()`, multilevel agglomerative edge bundling (Gansner et al. 2011)
 
 # edgebundle 0.4.2
 
