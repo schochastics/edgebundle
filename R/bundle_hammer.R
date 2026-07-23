@@ -23,7 +23,7 @@ edge_bundle_hammer <- function(object, xy, bw = 0.05, decay = 0.7) {
             stop("The `igraph` package is required for this functionality")
         }
         nodes <- data.frame(name = paste0("node", 0:(igraph::vcount(object) - 1)), x = xy[, 1], y = xy[, 2])
-        el <- igraph::get.edgelist(object, names = FALSE)
+        el <- igraph::as_edgelist(object, names = FALSE)
         el1 <- data.frame(source = el[, 1] - 1, target = el[, 2] - 1)
     } else if (any(class(object) == "tbl_graph")) {
         if (!requireNamespace("tidygraph", quietly = TRUE)) {
@@ -31,7 +31,7 @@ edge_bundle_hammer <- function(object, xy, bw = 0.05, decay = 0.7) {
         }
         object <- tidygraph::as.igraph(object)
         nodes <- data.frame(name = paste0("node", 0:(igraph::vcount(object) - 1)), x = xy[, 1], y = xy[, 2])
-        el <- igraph::get.edgelist(object, names = FALSE)
+        el <- igraph::as_edgelist(object, names = FALSE)
         el1 <- data.frame(source = el[, 1] - 1, target = el[, 2] - 1)
     } else if (any(class(object) == "network")) {
         nodes <- data.frame(name = paste0("node", 0:(network::get.network.attribute(object, "n") - 1)), x = xy[, 1], y = xy[, 2])

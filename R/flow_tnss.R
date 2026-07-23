@@ -122,16 +122,16 @@ tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = I
     igraph::V(g1)$y <- xymesh[, 2]
 
     # delete edges that are too long
-    el <- igraph::get.edgelist(g1, FALSE)
+    el <- igraph::as_edgelist(g1, FALSE)
     edges_xy <- cbind(xymesh[el[, 1], 1], xymesh[el[, 1], 2], xymesh[el[, 2], 1], xymesh[el[, 2], 2])
     dist <- apply(edges_xy, 1, function(x) sqrt((x[1] - x[3])^2 + (x[2] - x[4])^2))
     idx <- which(dist > elen)
     if (length(idx) != 0) {
-        g1 <- igraph::delete.edges(g1, idx)
+        g1 <- igraph::delete_edges(g1, idx)
     }
 
     # edge weights from distances
-    el <- igraph::get.edgelist(g1, FALSE)
+    el <- igraph::as_edgelist(g1, FALSE)
     edges_xy <- cbind(xymesh[el[, 1], 1], xymesh[el[, 1], 2], xymesh[el[, 2], 1], xymesh[el[, 2], 2])
     igraph::E(g1)$weight <- apply(edges_xy, 1, function(x) sqrt((x[1] - x[3])^2 + (x[2] - x[4])^2))
 
@@ -140,9 +140,9 @@ tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = I
     sp_edges <- vector("list", length(leafs))
     k <- 0
 
-    g2 <- igraph::as.directed(g1, "mutual")
-    ide <- which(igraph::get.edgelist(g2, FALSE)[, 1] %in% leafs)
-    g2 <- igraph::delete.edges(g2, ide)
+    g2 <- igraph::as_directed(g1, "mutual")
+    ide <- which(igraph::as_edgelist(g2, FALSE)[, 1] %in% leafs)
+    g2 <- igraph::delete_edges(g2, ide)
 
 
     dist2root <- sqrt((xy[root, 1] - xy[leafs, 1])^2 + (xy[root, 2] - xy[leafs, 2])^2)
@@ -168,13 +168,13 @@ tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = I
     del_nodes <- unique(unlist(sp_nodes))
     del_edges <- unique(unlist(sp_edges))
 
-    g3 <- igraph::delete.edges(g2, which(!((1:igraph::ecount(g2)) %in% del_edges)))
+    g3 <- igraph::delete_edges(g2, which(!((1:igraph::ecount(g2)) %in% del_edges)))
     idx <- which(!igraph::V(g3) %in% del_nodes)
-    g3 <- igraph::delete.vertices(g3, idx)
+    g3 <- igraph::delete_vertices(g3, idx)
 
     # straighten edges
     xymesh1 <- xymesh[-idx, ]
-    g4 <- igraph::as.undirected(g3)
+    g4 <- igraph::as_undirected(g3)
     g4 <- igraph::delete_edge_attr(g4, "weight")
     deg <- igraph::degree(g4)
     del2 <- c()
@@ -199,14 +199,14 @@ tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = I
     g5 <- g4
     for (v in del2_name) {
         ni <- igraph::neighborhood(g5, 1, v, mindist = 1)
-        g5 <- igraph::add.edges(g5, unlist(igraph::neighborhood(g5, 1, v, mindist = 1)))
+        g5 <- igraph::add_edges(g5, unlist(igraph::neighborhood(g5, 1, v, mindist = 1)))
         g5 <- igraph::delete_vertices(g5, v)
     }
 
     # calculate flow from edge weight
     gfinal <- g5
     igraph::E(gfinal)$flow <- 0
-    el <- igraph::get.edgelist(g, FALSE)
+    el <- igraph::as_edgelist(g, FALSE)
     for (dest in leafs) {
         ide <- which(el[, 1] == dest | el[, 2] == dest)
         w <- igraph::E(g)$weight[ide]
@@ -244,7 +244,7 @@ tnss_smooth <- function(g, bw = 3, n = 10) {
     root <- which(igraph::V(g)$tnss == "root")
     leafs <- which(igraph::V(g)$tnss == "leaf")
 
-    el <- igraph::get.edgelist(g, names = FALSE)
+    el <- igraph::as_edgelist(g, names = FALSE)
     xy <- cbind(igraph::V(g)$x, igraph::V(g)$y)
 
     ord <- order(igraph::distances(g, root, leafs), decreasing = TRUE)
