@@ -22,6 +22,11 @@
 - added divided edge bundling for directed graphs via
   `edge_bundle_force(directed = TRUE)` (Selassie et al. 2011): edges
   running in opposite directions are kept in separate lanes
+- [`edge_bundle_hammer()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_hammer.md)
+  is now a native C++ implementation of KDE edge bundling (Hurter et
+  al. 2012) and no longer depends on Python/`reticulate`/datashader.
+  `reticulate` was dropped from Imports and `install_bundle_py()` was
+  removed. Bundling output differs from the datashader-based version
 
 ## edgebundle 0.4.2
 

@@ -38,6 +38,8 @@
 <li>fixed <code><a href="../reference/edge_bundle_stub.html">edge_bundle_stub()</a></code>: the angular grouping was broken (wrong circular-gap handling and a bundle-size cap that summed cluster ids instead of counting edges) and vertical edges could produce <code>NaN</code>. Bundling output changes as a result</li>
 <li>fixed <code><a href="../reference/edge_bundle_path.html">edge_bundle_path()</a></code>: the path-length used in the distortion test was computed along the wrong vertices, so edges were essentially never routed. Bundling output changes as a result</li>
 <li>added divided edge bundling for directed graphs via <code>edge_bundle_force(directed = TRUE)</code> (Selassie et al. 2011): edges running in opposite directions are kept in separate lanes</li>
+<li>
+<code><a href="../reference/edge_bundle_hammer.html">edge_bundle_hammer()</a></code> is now a native C++ implementation of KDE edge bundling (Hurter et al. 2012) and no longer depends on Python/<code>reticulate</code>/datashader. <code>reticulate</code> was dropped from Imports and <code>install_bundle_py()</code> was removed. Bundling output differs from the datashader-based version</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="edgebundle-042">edgebundle 0.4.2<a class="anchor" aria-label="anchor" href="#edgebundle-042"></a></h2><p class="text-muted">CRAN release: 2023-12-16</p>
