@@ -28,7 +28,7 @@ edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments
     bundle_strength = 1, mode = "out") {
     # preprocess
     if (!igraph::is_igraph(g)) {
-        stop("edge_bundle_path requires the input graph to be an ingraph object")
+        stop("edge_bundle_path requires the input graph to be an igraph object")
     }
     m <- igraph::ecount(g)
     lock <- rep(FALSE, m)
@@ -82,9 +82,13 @@ edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments
 }
 
 path_length <- function(verts, xy) {
+    verts <- as.integer(verts)
     plen <- 0
     for (i in 1:(length(verts) - 1)) {
-        plen <- plen + sqrt((xy[i, 1] - xy[i + 1, 1])^2 + (xy[i, 2] - xy[i + 1, 2])^2)
+        plen <- plen + sqrt(
+            (xy[verts[i], 1] - xy[verts[i + 1], 1])^2 +
+                (xy[verts[i], 2] - xy[verts[i + 1], 2])^2
+        )
     }
     plen
 }
@@ -108,12 +112,6 @@ subdivide <- function(points, bs) {
 approximateBezier <- function(points, n) {
     pnrow <- nrow(points) - 1
     tseq <- seq(0, 1, length.out = n)
-    if (pnrow == 1) {
-        bezier <- cbind(
-            tseq * points[1, 1] + (1 - tseq) * points[2, 1],
-            tseq * points[1, 2] + (1 - tseq) * points[2, 2]
-        )
-    }
     binoms <- choose(pnrow, seq(0, pnrow))
     bezier <- matrix(0, length(tseq), 2)
     b <- 1

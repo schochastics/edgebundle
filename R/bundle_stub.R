@@ -49,8 +49,6 @@ edge_bundle_stub <- function(object, xy, alpha = 11, beta = 75, gamma = 40, t = 
         el <- igraph::as_edgelist(object, FALSE)
         adj <- igraph::as_adj_list(object, "all")
     } else if (any(class(object) == "network")) {
-        el <- network::as.edgelist(object)
-
         stop("`network` objects not supported. Convert object to `igraph` or `tbl_graph` first.")
     } else {
         stop("only `igraph` or `tbl_graph` objects supported.")
@@ -87,75 +85,50 @@ euclidean_dist <- function(p, q) {
     sqrt(sum((p - q)^2))
 }
 
+# Acute angle (radians) between the two edges, robust to vertical edges.
 angle_edge <- function(P, Q) {
-    pvec <- c(P[3] - P[1], P[4] - P[2])
-    qvec <- c(Q[3] - Q[1], Q[4] - Q[2])
-    # dot_pq <- sum(pvec*qvec)
-    # mag_pq <- sum(pvec^2)*sum(qvec^2)
-    # acos(dot_pq/mag_pq)*180/pi
-
-    m1 <- pvec[2] / pvec[1]
-    m2 <- qvec[2] / qvec[1]
-    a <- atan((m1 - m2) / (1 + m1 * m2))
-    aa <- c(a * 180 / pi, -a * 180 / pi)
-    aa[aa < 0] <- 360 + aa[aa < 0]
-    aa <- aa * pi / 180
-    min(aa)
+    ap <- atan2(P[4] - P[2], P[3] - P[1])
+    aq <- atan2(Q[4] - Q[2], Q[3] - Q[1])
+    d <- abs(ap - aq) %% pi
+    if (d > pi / 2) d <- pi - d
+    d
 }
 
 angle_edge_vec <- Vectorize(angle_edge)
 
 bundle_edges <- function(edges_xy, gamma, alpha) {
-    if (nrow(edges_xy) == 1) {
+    n <- nrow(edges_xy)
+    if (n == 1) {
         return(1)
-        # return(t(c(1,1)))
     }
-    dat <- as.data.frame(edges_xy)
-    dat[["V3"]] <- dat[["V3"]] - dat[["V1"]]
-    dat[["V4"]] <- dat[["V4"]] - dat[["V2"]]
-    dat[["V1"]] <- dat[["V2"]] <- 0
-    elen <- sqrt(dat[["V3"]]^2 + dat[["V4"]]^2)
-    dat[["x"]] <- dat[["V3"]] / elen
-    dat[["y"]] <- dat[["V4"]] / elen
-    dat[["angle"]] <- atan2(dat[["y"]], dat[["x"]]) * 180 / pi
-    dat[["angle"]] <- ifelse(dat[["angle"]] < 0, 360 + dat[["angle"]], dat[["angle"]])
-    aord <- order(dat[["angle"]])
-    angle_vec <- dat[["angle"]][aord]
-    w <- pmin(
-        abs(angle_vec - angle_vec[c(2:length(angle_vec), 1)]),
-        360 + angle_vec[c(2:length(angle_vec), 1)] - angle_vec
-    )
+    vec_x <- edges_xy[, 3] - edges_xy[, 1]
+    vec_y <- edges_xy[, 4] - edges_xy[, 2]
+    ang <- atan2(vec_y, vec_x) * 180 / pi
+    ang <- ifelse(ang < 0, 360 + ang, ang)
+    aord <- order(ang)
+    av <- ang[aord]
 
-    if (length(w) == 1) {
-        if (w > alpha) {
-            return(c(1, 2))
-        } else {
-            return(c(1, 1))
+    # forward angular gap to the next edge around the circle; gaps sum to 360
+    gap <- c(av[-1], av[1] + 360) - av
+
+    # walk the edges as a ring starting just after the widest gap, so the arcs
+    # between wide gaps stay contiguous; split when a gap exceeds alpha or the
+    # bundle reaches gamma edges
+    start <- which.max(gap)
+    walk <- ((start + seq_len(n) - 1) %% n) + 1
+    bundles <- integer(n)
+    cur <- 1L
+    count <- 0L
+    prev <- NA_integer_
+    for (p in walk) {
+        if (!is.na(prev) && (gap[prev] >= alpha || count >= gamma)) {
+            cur <- cur + 1L
+            count <- 0L
         }
+        bundles[aord[p]] <- cur
+        count <- count + 1L
+        prev <- p
     }
-
-    start <- which.min(w)
-    bundles <- rep(0, length(aord))
-    if (start != 1) {
-        w <- w[c(start:length(w), 1:(start - 1))]
-        aord <- aord[c(start:length(w), 1:(start - 1))]
-    }
-    bundles[aord[1]] <- 1
-    bundles[aord[2]] <- 1
-    cur <- 1
-    for (i in 2:length(w) - 1) {
-        if (w[i] < alpha && sum(bundles[bundles == cur]) < gamma) {
-            bundles[aord[i + 1]] <- cur
-        } else {
-            cur <- cur + 1
-            bundles[aord[i + 1]] <- cur
-        }
-    }
-
-    # pa <- graph.ring(nrow(edges_xy),directed = FALSE)
-    # E(pa)$weight <- 360-w
-    # bundles <- cluster_louvain(pa,weights = E(pa)$weight)$membership[order(aord)]
-
     bundles
 }
 

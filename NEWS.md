@@ -3,6 +3,8 @@
 * switched the test suite to testthat edition 3 and added correctness tests for every exported function
 * modernised all `igraph` calls to the 2.x API, removing deprecation warnings
 * `edge_bundle_force()` now also accepts a two-column edgelist matrix
+* fixed `edge_bundle_stub()`: the angular grouping was broken (wrong circular-gap handling and a bundle-size cap that summed cluster ids instead of counting edges) and vertical edges could produce `NaN`. Bundling output changes as a result
+* fixed `edge_bundle_path()`: the path-length used in the distortion test was computed along the wrong vertices, so edges were essentially never routed. Bundling output changes as a result
 
 # edgebundle 0.4.2
 
