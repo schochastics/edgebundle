@@ -12,12 +12,20 @@
 #' @param I_rate rate of iteration decrease per cycle
 #' @param compatibility_threshold threshold for when edges are considered compatible
 #' @param eps accuracy
+#' @param directed logical. If `TRUE`, use divided edge bundling (Selassie et al.
+#'   2011) which keeps edges running in opposite directions in separate lanes.
+#'   Requires an igraph/tbl_graph object with edge directions.
+#' @param ... arguments passed to the divided bundler when `directed = TRUE`:
+#'   `lane_width`, `k_spring`, `k_charge`, `decay`, `friction`, `step`, `passes`,
+#'   `iterations`, `use_connectivity`.
 #' @return data.frame containing the bundled edges
 #' @author David Schoch
 #' @details see [online](https://github.com/schochastics/edgebundle) for plotting tips
 #' @seealso [edge_bundle_hammer],[edge_bundle_stub],[edge_bundle_path]
 #' @references
 #' Holten, Danny, and Jarke J. Van Wijk. "Force-Directed Edge Bundling for Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd) 28, no. 3 (2009): 983-990.
+#'
+#' Selassie, David, Brandon Heller, and Jeffrey Heer. "Divided edge bundling for directional network data." IEEE Transactions on Visualization and Computer Graphics 17, no. 12 (2011): 2354-2363.
 #' @examples
 #' library(igraph)
 #' g <- graph_from_edgelist(
@@ -33,7 +41,10 @@
 edge_bundle_force <- function(object, xy, K = 1, C = 6, P = 1, S = 0.04,
                               P_rate = 2, I = 50, I_rate = 2 / 3,
                               compatibility_threshold = 0.6,
-                              eps = 1e-8) {
+                              eps = 1e-8, directed = FALSE, ...) {
+    if (directed) {
+        return(.edge_bundle_divided(object, xy, ...))
+    }
     edges_xy <- .bundle_inputs(object, xy)$exy
     m <- nrow(edges_xy)
 

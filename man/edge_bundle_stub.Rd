@@ -40,7 +40,7 @@ see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
 }
 \examples{
 library(igraph)
-g <- graph.star(10, "undirected")
+g <- make_star(10, "undirected")
 
 xy <- matrix(c(
     0, 0,

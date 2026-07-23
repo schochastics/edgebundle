@@ -5,6 +5,7 @@
 * `edge_bundle_force()` now also accepts a two-column edgelist matrix
 * fixed `edge_bundle_stub()`: the angular grouping was broken (wrong circular-gap handling and a bundle-size cap that summed cluster ids instead of counting edges) and vertical edges could produce `NaN`. Bundling output changes as a result
 * fixed `edge_bundle_path()`: the path-length used in the distortion test was computed along the wrong vertices, so edges were essentially never routed. Bundling output changes as a result
+* added divided edge bundling for directed graphs via `edge_bundle_force(directed = TRUE)` (Selassie et al. 2011): edges running in opposite directions are kept in separate lanes
 
 # edgebundle 0.4.2
 
