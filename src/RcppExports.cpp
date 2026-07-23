@@ -11,13 +11,12 @@ Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
 #endif
 
 // force_bundle_iter
-List force_bundle_iter(NumericMatrix edges_xy, List elist, double K, int C, int P, int P_rate, double S, int I, double I_rate, double compatibility_threshold, double eps);
-RcppExport SEXP _edgebundle_force_bundle_iter(SEXP edges_xySEXP, SEXP elistSEXP, SEXP KSEXP, SEXP CSEXP, SEXP PSEXP, SEXP P_rateSEXP, SEXP SSEXP, SEXP ISEXP, SEXP I_rateSEXP, SEXP compatibility_thresholdSEXP, SEXP epsSEXP) {
+List force_bundle_iter(NumericMatrix edges_xy, double K, int C, int P, int P_rate, double S, int I, double I_rate, double compatibility_threshold, double eps);
+RcppExport SEXP _edgebundle_force_bundle_iter(SEXP edges_xySEXP, SEXP KSEXP, SEXP CSEXP, SEXP PSEXP, SEXP P_rateSEXP, SEXP SSEXP, SEXP ISEXP, SEXP I_rateSEXP, SEXP compatibility_thresholdSEXP, SEXP epsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< NumericMatrix >::type edges_xy(edges_xySEXP);
-    Rcpp::traits::input_parameter< List >::type elist(elistSEXP);
     Rcpp::traits::input_parameter< double >::type K(KSEXP);
     Rcpp::traits::input_parameter< int >::type C(CSEXP);
     Rcpp::traits::input_parameter< int >::type P(PSEXP);
@@ -27,7 +26,7 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type I_rate(I_rateSEXP);
     Rcpp::traits::input_parameter< double >::type compatibility_threshold(compatibility_thresholdSEXP);
     Rcpp::traits::input_parameter< double >::type eps(epsSEXP);
-    rcpp_result_gen = Rcpp::wrap(force_bundle_iter(edges_xy, elist, K, C, P, P_rate, S, I, I_rate, compatibility_threshold, eps));
+    rcpp_result_gen = Rcpp::wrap(force_bundle_iter(edges_xy, K, C, P, P_rate, S, I, I_rate, compatibility_threshold, eps));
     return rcpp_result_gen;
 END_RCPP
 }
@@ -111,7 +110,7 @@ END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_edgebundle_force_bundle_iter", (DL_FUNC) &_edgebundle_force_bundle_iter, 11},
+    {"_edgebundle_force_bundle_iter", (DL_FUNC) &_edgebundle_force_bundle_iter, 10},
     {"_edgebundle_criterion_angular_resolution", (DL_FUNC) &_edgebundle_criterion_angular_resolution, 2},
     {"_edgebundle_criterion_edge_length", (DL_FUNC) &_edgebundle_criterion_edge_length, 3},
     {"_edgebundle_criterion_balanced_edge_length", (DL_FUNC) &_edgebundle_criterion_balanced_edge_length, 2},
