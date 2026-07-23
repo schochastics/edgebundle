@@ -1,6 +1,8 @@
 # edgebundle (development version)
 
 * switched the test suite to testthat edition 3 and added correctness tests for every exported function
+* modernised all `igraph` calls to the 2.x API, removing deprecation warnings
+* `edge_bundle_force()` now also accepts a two-column edgelist matrix
 
 # edgebundle 0.4.2
 

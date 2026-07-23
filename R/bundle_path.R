@@ -27,14 +27,14 @@
 edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments = 20,
     bundle_strength = 1, mode = "out") {
     # preprocess
-    if (!igraph::is.igraph(g)) {
+    if (!igraph::is_igraph(g)) {
         stop("edge_bundle_path requires the input graph to be an ingraph object")
     }
     m <- igraph::ecount(g)
     lock <- rep(FALSE, m)
     skip <- rep(FALSE, m)
 
-    el <- igraph::get.edgelist(g, names = FALSE)
+    el <- igraph::as_edgelist(g, names = FALSE)
     exy <- cbind(
         xy[el[, 1], 1], xy[el[, 1], 2],
         xy[el[, 2], 1], xy[el[, 2], 2]
@@ -52,7 +52,7 @@ edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments
             next()
         }
         skip[e] <- TRUE
-        g1 <- igraph::delete.edges(g, which(skip))
+        g1 <- igraph::delete_edges(g, which(skip))
         sp_verts <- suppressWarnings(igraph::shortest_paths(g1, s, t, weights = weights[!skip], mode = mode)$vpath[[1]])
         if (length(sp_verts) < 2) {
             skip[e] <- FALSE
@@ -63,7 +63,7 @@ edge_bundle_path <- function(g, xy, max_distortion = 2, weight_fac = 2, segments
             skip[e] <- FALSE
             next
         }
-        lock[igraph::get.edge.ids(g, rep(as.integer(sp_verts), each = 2)[-c(1, 2 * length(sp_verts))])] <- TRUE
+        lock[igraph::get_edge_ids(g, rep(as.integer(sp_verts), each = 2)[-c(1, 2 * length(sp_verts))])] <- TRUE
         cpoints[[e]] <- xy[sp_verts, ]
     }
     cpoints <- lapply(cpoints, subdivide, bs = bundle_strength)

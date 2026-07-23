@@ -15,7 +15,7 @@
 #' Nocaj, Arlind, and Ulrik Brandes. "Stub bundling and confluent spirals for geographic networks." International Symposium on Graph Drawing. Springer, Cham, 2013.
 #' @examples
 #' library(igraph)
-#' g <- graph.star(10, "undirected")
+#' g <- make_star(10, "undirected")
 #'
 #' xy <- matrix(c(
 #'     0, 0,
@@ -39,15 +39,15 @@ edge_bundle_stub <- function(object, xy, alpha = 11, beta = 75, gamma = 40, t = 
         if (!requireNamespace("igraph", quietly = TRUE)) {
             stop("The `igraph` package is required for this functionality")
         }
-        el <- igraph::get.edgelist(object, FALSE)
-        adj <- igraph::get.adjlist(object, "all")
+        el <- igraph::as_edgelist(object, FALSE)
+        adj <- igraph::as_adj_list(object, "all")
     } else if (any(class(object) == "tbl_graph")) {
         if (!requireNamespace("tidygraph", quietly = TRUE)) {
             stop("The `tidygraph` package is required for this functionality")
         }
         object <- tidygraph::as.igraph(object)
-        el <- igraph::get.edgelist(object, FALSE)
-        adj <- igraph::get.adjlist(object, "all")
+        el <- igraph::as_edgelist(object, FALSE)
+        adj <- igraph::as_adj_list(object, "all")
     } else if (any(class(object) == "network")) {
         el <- network::as.edgelist(object)
 

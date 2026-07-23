@@ -30,7 +30,7 @@ metro_multicriteria <- function(object, xy, l = 2, gr = 0.0025, w = rep(1, 5), b
     adj <- as_adj_list1(object)
     adj <- lapply(adj, function(x) x - 1)
     adj_deg2 <- adj[unlist(lapply(adj, length)) == 2]
-    el <- igraph::get.edgelist(object, FALSE) - 1
+    el <- igraph::as_edgelist(object, FALSE) - 1
 
     xy <- snap_to_grid(xy, gr)
 
