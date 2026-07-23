@@ -19,7 +19,7 @@
 - [`metro_berlin`](https://schochastics.github.io/edgebundle/reference/metro_berlin.md)
   : Subway network of Berlin
 - [`metro_multicriteria()`](https://schochastics.github.io/edgebundle/reference/metro_multicriteria.md)
-  : Metro Map Layout
+  : Metro Map Layout (deprecated)
 - [`tnss_dummies()`](https://schochastics.github.io/edgebundle/reference/tnss_dummies.md)
   : Sample points for triangulated networks
 - [`tnss_smooth()`](https://schochastics.github.io/edgebundle/reference/tnss_smooth.md)

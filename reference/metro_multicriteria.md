@@ -1,6 +1,8 @@
-# Metro Map Layout
+# Metro Map Layout (deprecated)
 
-Metro map layout based on multicriteria optimization
+Metro map layout based on multicriteria optimization. **Deprecated**:
+use `graphlayouts::layout_as_metromap()` instead, which now provides
+this layout.
 
 ## Usage
 
@@ -89,4 +91,5 @@ xy <- cbind(V(g)$lon, V(g)$lat) * 100
 
 # the algorithm is not very stable. try playing with the parameters
 xy_new <- metro_multicriteria(g, xy, l = 2, gr = 0.5, w = c(100, 100, 1, 1, 100), bsize = 35)
+#> Warning: metro_multicriteria() is deprecated; use graphlayouts::layout_as_metromap() instead.
 ```

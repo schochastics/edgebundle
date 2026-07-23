@@ -30,6 +30,9 @@
 - added
   [`edge_bundle_mingle()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_mingle.md),
   multilevel agglomerative edge bundling (Gansner et al. 2011)
+- [`metro_multicriteria()`](https://schochastics.github.io/edgebundle/reference/metro_multicriteria.md)
+  is deprecated in favour of `graphlayouts::layout_as_metromap()` and
+  will be removed in a future release
 
 ## edgebundle 0.4.2
 
