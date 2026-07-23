@@ -37,13 +37,8 @@ edge_bundle_force <- function(object, xy, K = 1, C = 6, P = 1, S = 0.04,
     edges_xy <- .bundle_inputs(object, xy)$exy
     m <- nrow(edges_xy)
 
-    elist <- unname(lapply(
-        split(edges_xy, rep(seq_len(nrow(edges_xy)), ncol(edges_xy))),
-        function(y) matrix(y, 2, 2, byrow = TRUE)
-    ))
-
     elist <- force_bundle_iter(
-        edges_xy, elist, K, C, P, P_rate,
+        edges_xy, K, C, P, P_rate,
         S, I, I_rate, compatibility_threshold, eps
     )
 
