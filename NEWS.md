@@ -8,6 +8,7 @@
 * added divided edge bundling for directed graphs via `edge_bundle_force(directed = TRUE)` (Selassie et al. 2011): edges running in opposite directions are kept in separate lanes
 * `edge_bundle_hammer()` is now a native C++ implementation of KDE edge bundling (Hurter et al. 2012) and no longer depends on Python/`reticulate`/datashader. `reticulate` was dropped from Imports and `install_bundle_py()` was removed. Bundling output differs from the datashader-based version
 * added `edge_bundle_mingle()`, multilevel agglomerative edge bundling (Gansner et al. 2011)
+* `metro_multicriteria()` is deprecated in favour of `graphlayouts::layout_as_metromap()` and will be removed in a future release
 
 # edgebundle 0.4.2
 

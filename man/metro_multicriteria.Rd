@@ -2,7 +2,7 @@
 % Please edit documentation in R/metro_multicriteria.R
 \name{metro_multicriteria}
 \alias{metro_multicriteria}
-\title{Metro Map Layout}
+\title{Metro Map Layout (deprecated)}
 \usage{
 metro_multicriteria(object, xy, l = 2, gr = 0.0025, w = rep(1, 5), bsize = 5)
 }
@@ -23,7 +23,9 @@ metro_multicriteria(object, xy, l = 2, gr = 0.0025, w = rep(1, 5), bsize = 5)
 new coordinates for stations
 }
 \description{
-Metro map layout based on multicriteria optimization
+Metro map layout based on multicriteria optimization.
+\strong{Deprecated}: use \code{graphlayouts::layout_as_metromap()} instead, which now
+provides this layout.
 }
 \details{
 The function optimizes the following five criteria using a hill climbing algorithm:
