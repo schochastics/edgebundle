@@ -5,15 +5,19 @@ algorithms. It includes:
 
 - Force directed edge bundling
   [`edge_bundle_force()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_force.md)
+  (with a divided/directed variant)
 
 - Stub bundling
   [`edge_bundle_stub()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_stub.md)
 
-- Hammer bundling
+- Hammer bundling (KDE)
   [`edge_bundle_hammer()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_hammer.md)
 
 - Edge-path bundling
   [`edge_bundle_path()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_path.md)
+
+- MINGLE bundling
+  [`edge_bundle_mingle()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_mingle.md)
 
 - TNSS flow map `tnss_*()`
 

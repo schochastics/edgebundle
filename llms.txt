@@ -410,6 +410,8 @@ and **do not expect any miracles**.
   : force directed edge bundling
 - [`edge_bundle_hammer()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_hammer.md)
   : hammer edge bundling
+- [`edge_bundle_mingle()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_mingle.md)
+  : MINGLE edge bundling
 - [`edge_bundle_path()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_path.md)
   : Edge-Path Bundling
 - [`edge_bundle_stub()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_stub.md)

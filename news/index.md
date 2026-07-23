@@ -27,6 +27,9 @@
   al. 2012) and no longer depends on Python/`reticulate`/datashader.
   `reticulate` was dropped from Imports and `install_bundle_py()` was
   removed. Bundling output differs from the datashader-based version
+- added
+  [`edge_bundle_mingle()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_mingle.md),
+  multilevel agglomerative edge bundling (Gansner et al. 2011)
 
 ## edgebundle 0.4.2
 
