@@ -5,6 +5,9 @@
 - **David Schoch**. Author, maintainer.
   [](https://orcid.org/0000-0003-2952-4812)
 
+- **Jose Luis Blanco-Claraco**. Copyright holder.  
+  Author of the bundled nanoflann C++ library
+
 ## Citation
 
 Source:

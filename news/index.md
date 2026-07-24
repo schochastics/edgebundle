@@ -29,7 +29,10 @@
   removed. Bundling output differs from the datashader-based version
 - added
   [`edge_bundle_mingle()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_mingle.md),
-  multilevel agglomerative edge bundling (Gansner et al. 2011)
+  multilevel agglomerative edge bundling (Gansner et al. 2011); the kNN
+  proximity graph is built with a bundled kd-tree (nanoflann) for O(E
+  log E) scaling, with a `k` parameter for the number of merge
+  candidates per edge
 - [`metro_multicriteria()`](https://schochastics.github.io/edgebundle/reference/metro_multicriteria.md)
   is deprecated in favour of `graphlayouts::layout_as_metromap()` and
   will be removed in a future release

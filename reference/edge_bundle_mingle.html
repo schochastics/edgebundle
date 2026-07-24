@@ -36,7 +36,7 @@
 
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edge_bundle_mingle</span><span class="op">(</span><span class="va">object</span>, <span class="va">xy</span>, segments <span class="op">=</span> <span class="fl">50</span>, bundle_strength <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span></code></pre></div>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">edge_bundle_mingle</span><span class="op">(</span><span class="va">object</span>, <span class="va">xy</span>, k <span class="op">=</span> <span class="fl">10</span>, segments <span class="op">=</span> <span class="fl">50</span>, bundle_strength <span class="op">=</span> <span class="fl">0.9</span><span class="op">)</span></span></code></pre></div>
     </div>
 
     <div class="section level2">
@@ -49,6 +49,10 @@
 
 <dt id="arg-xy">xy<a class="anchor" aria-label="anchor" href="#arg-xy"></a></dt>
 <dd><p>coordinates of vertices</p></dd>
+
+
+<dt id="arg-k">k<a class="anchor" aria-label="anchor" href="#arg-k"></a></dt>
+<dd><p>number of nearest neighbours considered as merge candidates per edge</p></dd>
 
 
 <dt id="arg-segments">segments<a class="anchor" aria-label="anchor" href="#arg-segments"></a></dt>
@@ -69,8 +73,8 @@
     <p>Groups edges bottom-up: two bundles are merged whenever routing them
 through shared meeting points reduces the total drawn length ("ink"). Meeting
 points are the geometric medians of the source-side and target-side endpoints.
-The nearest-neighbour search is currently brute force (O(E^2)); adequate for
-interactive graph sizes.</p>
+A kNN proximity graph over the edges is built once with a kd-tree and then
+coarsened level by level (O(E log E)).</p>
 <p>see <a href="https://github.com/schochastics/edgebundle" class="external-link">online</a> for plotting tips</p>
     </div>
     <div class="section level2">

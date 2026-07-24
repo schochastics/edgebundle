@@ -40,7 +40,7 @@
 <li>added divided edge bundling for directed graphs via <code>edge_bundle_force(directed = TRUE)</code> (Selassie et al. 2011): edges running in opposite directions are kept in separate lanes</li>
 <li>
 <code><a href="../reference/edge_bundle_hammer.html">edge_bundle_hammer()</a></code> is now a native C++ implementation of KDE edge bundling (Hurter et al. 2012) and no longer depends on Python/<code>reticulate</code>/datashader. <code>reticulate</code> was dropped from Imports and <code>install_bundle_py()</code> was removed. Bundling output differs from the datashader-based version</li>
-<li>added <code><a href="../reference/edge_bundle_mingle.html">edge_bundle_mingle()</a></code>, multilevel agglomerative edge bundling (Gansner et al. 2011)</li>
+<li>added <code><a href="../reference/edge_bundle_mingle.html">edge_bundle_mingle()</a></code>, multilevel agglomerative edge bundling (Gansner et al. 2011); the kNN proximity graph is built with a bundled kd-tree (nanoflann) for O(E log E) scaling, with a <code>k</code> parameter for the number of merge candidates per edge</li>
 <li>
 <code><a href="../reference/metro_multicriteria.html">metro_multicriteria()</a></code> is deprecated in favour of <code>graphlayouts::layout_as_metromap()</code> and will be removed in a future release</li>
 </ul></div>

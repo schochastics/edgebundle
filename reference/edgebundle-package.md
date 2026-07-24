@@ -43,3 +43,8 @@ Authors:
 
 - David Schoch <david@schochastics.net>
   ([ORCID](https://orcid.org/0000-0003-2952-4812))
+
+Other contributors:
+
+- Jose Luis Blanco-Claraco (Author of the bundled nanoflann C++ library)
+  \[copyright holder\]
