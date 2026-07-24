@@ -4,10 +4,15 @@
 //
 // Edges are grouped bottom-up: two bundles merge when routing them through
 // shared meeting points reduces total "ink" (drawn length). Meeting points are
-// the geometric medians of the source-side and target-side endpoints. kNN over
-// edges is brute force (O(E^2)); fine for interactive sizes, and keeps the
-// package dependency-free (a kd-tree could be swapped in for very large graphs).
+// the geometric medians of the source-side and target-side endpoints.
+//
+// A kNN proximity graph over the edges (points in canonical 4-D endpoint space)
+// is built once with a kd-tree (vendored nanoflann), giving O(E log E); the
+// graph is then coarsened combinatorially level by level.
 #include <Rcpp.h>
+#include "nanoflann.hpp"
+#include <set>
+#include <array>
 using namespace Rcpp;
 
 struct Pt {
@@ -93,6 +98,15 @@ static Bundle do_merge(const Bundle &b1, const Bundle &b2, bool flip2) {
     return out;
 }
 
+// nanoflann point-cloud adaptor over canonical 4-D edge coordinates
+struct EdgeCloud {
+    std::vector<std::array<double, 4>> pts;
+    inline size_t kdtree_get_point_count() const { return pts.size(); }
+    inline double kdtree_get_pt(const size_t idx, const size_t dim) const { return pts[idx][dim]; }
+    template <class BBOX>
+    bool kdtree_get_bbox(BBOX &) const { return false; }
+};
+
 // [[Rcpp::export]]
 List mingle_iter(NumericMatrix edges_xy, int k, int segments, double bundle_strength) {
     int m = edges_xy.rows();
@@ -110,6 +124,39 @@ List mingle_iter(NumericMatrix edges_xy, int k, int segments, double bundle_stre
         finalize(bundles[e]);
     }
 
+    // one-time kNN proximity graph in canonical 4-D endpoint space (kd-tree)
+    std::vector<std::vector<int>> adj(m);
+    if (m > 1) {
+        EdgeCloud cloud;
+        cloud.pts.resize(m);
+        for (int e = 0; e < m; ++e) {
+            cloud.pts[e] = {bundles[e].A[0].x, bundles[e].A[0].y,
+                            bundles[e].B[0].x, bundles[e].B[0].y};
+        }
+        typedef nanoflann::KDTreeSingleIndexAdaptor<
+            nanoflann::L2_Simple_Adaptor<double, EdgeCloud>, EdgeCloud, 4>
+            KDTree;
+        KDTree tree(4, cloud, nanoflann::KDTreeSingleIndexAdaptorParams(10));
+        tree.buildIndex();
+
+        size_t kq = std::min((size_t)k + 1, (size_t)m);
+        std::vector<std::set<int>> adjset(m);
+        std::vector<size_t> nn_idx(kq);
+        std::vector<double> nn_d2(kq);
+        for (int e = 0; e < m; ++e) {
+            nanoflann::KNNResultSet<double> res(kq);
+            res.init(nn_idx.data(), nn_d2.data());
+            tree.findNeighbors(res, cloud.pts[e].data(), nanoflann::SearchParameters());
+            for (size_t t = 0; t < kq; ++t) {
+                int j = (int)nn_idx[t];
+                if (j == e) continue;
+                adjset[e].insert(j);
+                adjset[j].insert(e); // keep the candidate graph symmetric
+            }
+        }
+        for (int e = 0; e < m; ++e) adj[e].assign(adjset[e].begin(), adjset[e].end());
+    }
+
     // meeting-point chain per edge, from finest to coarsest merged level, in
     // original source->target orientation (leaf endpoints are added at render)
     std::vector<std::vector<Pt>> srcChain(m), tgtChain(m);
@@ -119,45 +166,49 @@ List mingle_iter(NumericMatrix edges_xy, int k, int segments, double bundle_stre
         improved = false;
         int nb = bundles.size();
 
-        // brute-force kNN over bundle descriptors (ma,mb)
-        std::vector<std::pair<double, std::pair<int, bool>>> best(nb, {1e18, {-1, false}});
+        // nearest candidate neighbour (by meeting-point distance) per bundle
+        std::vector<int> bestj(nb, -1);
+        std::vector<char> bestflip(nb, 0);
+        std::vector<double> bestsav(nb, 0.0);
         for (int i = 0; i < nb; ++i) {
-            for (int j = 0; j < nb; ++j) {
-                if (i == j) continue;
+            double bd = 1e18;
+            int bj = -1;
+            bool bf = false;
+            for (int j : adj[i]) {
                 double d = dist(bundles[i].ma, bundles[j].ma) + dist(bundles[i].mb, bundles[j].mb);
                 double dflip = dist(bundles[i].ma, bundles[j].mb) + dist(bundles[i].mb, bundles[j].ma);
                 bool fl = dflip < d;
                 double dd = std::min(d, dflip);
-                if (dd < best[i].first) best[i] = {dd, {j, fl}};
+                if (dd < bd) {
+                    bd = dd;
+                    bj = j;
+                    bf = fl;
+                }
+            }
+            if (bj >= 0) {
+                bestj[i] = bj;
+                bestflip[i] = bf;
+                bestsav[i] = bundles[i].ink + bundles[bj].ink - merged_ink(bundles[i], bundles[bj], bf);
             }
         }
-        (void)k; // kNN kept to nearest for simplicity; k reserved for future use
 
-        // greedy ink-reducing matching
+        // greedy ink-reducing matching, largest saving first
+        std::vector<int> order;
+        for (int i = 0; i < nb; ++i) {
+            if (bestj[i] >= 0) order.push_back(i);
+        }
+        std::sort(order.begin(), order.end(), [&](int a, int b) { return bestsav[a] > bestsav[b]; });
+
         std::vector<char> used(nb, 0);
         std::vector<Bundle> next;
         std::vector<int> newIndexOf(nb, -1);
-
-        std::vector<std::pair<double, int>> order;
-        for (int i = 0; i < nb; ++i) {
-            int j = best[i].second.first;
-            if (j < 0) continue;
-            bool fl = best[i].second.second;
-            double sav = bundles[i].ink + bundles[j].ink - merged_ink(bundles[i], bundles[j], fl);
-            order.push_back({sav, i});
-        }
-        std::sort(order.begin(), order.end(), [](auto &a, auto &b) { return a.first > b.first; });
-
-        for (auto &o : order) {
-            int i = o.second;
-            int j = best[i].second.first;
-            bool fl = best[i].second.second;
+        for (int i : order) {
+            int j = bestj[i];
             if (used[i] || used[j]) continue;
-            if (o.first <= 1e-9) continue;
+            if (bestsav[i] <= 1e-9) continue;
             used[i] = used[j] = 1;
-            Bundle mb = do_merge(bundles[i], bundles[j], fl);
             newIndexOf[i] = newIndexOf[j] = next.size();
-            next.push_back(mb);
+            next.push_back(do_merge(bundles[i], bundles[j], bestflip[i]));
             improved = true;
         }
         for (int i = 0; i < nb; ++i) {
@@ -168,7 +219,6 @@ List mingle_iter(NumericMatrix edges_xy, int k, int segments, double bundle_stre
         }
 
         if (improved) {
-            // record this level's meeting points for every edge
             for (int i = 0; i < nb; ++i) {
                 Bundle &nb2 = next[newIndexOf[i]];
                 for (size_t mi = 0; mi < nb2.edges.size(); ++mi) {
@@ -178,14 +228,25 @@ List mingle_iter(NumericMatrix edges_xy, int k, int segments, double bundle_stre
                     tgtChain[e].push_back(flipped ? nb2.ma : nb2.mb);
                 }
             }
-            // dedup: the loop above pushes once per edge because each edge lives
-            // in exactly one next bundle
+            // contract the candidate graph onto the coarse bundles
+            std::vector<std::set<int>> nadj(next.size());
+            for (int i = 0; i < nb; ++i) {
+                for (int j : adj[i]) {
+                    int a = newIndexOf[i], b = newIndexOf[j];
+                    if (a != b) {
+                        nadj[a].insert(b);
+                        nadj[b].insert(a);
+                    }
+                }
+            }
+            adj.assign(next.size(), {});
+            for (size_t i = 0; i < next.size(); ++i) adj[i].assign(nadj[i].begin(), nadj[i].end());
         }
         bundles = next;
     }
 
     // assemble per-edge control polyline: source, src meeting points (fine->coarse),
-    // tgt meeting points (coarse->fine), target; then subdivide toward straight
+    // tgt meeting points (coarse->fine), target; then relax toward the straight line
     List out(m);
     for (int e = 0; e < m; ++e) {
         Pt s{edges_xy(e, 0), edges_xy(e, 1)};
@@ -196,7 +257,6 @@ List mingle_iter(NumericMatrix edges_xy, int k, int segments, double bundle_stre
         for (size_t i = tgtChain[e].size(); i-- > 0;) cp.push_back(tgtChain[e][i]);
         cp.push_back(t);
 
-        // relax control points toward the straight line by (1 - bundle_strength)
         for (size_t i = 1; i + 1 < cp.size(); ++i) {
             double u = (double)i / (cp.size() - 1);
             Pt straight{s.x + u * (t.x - s.x), s.y + u * (t.y - s.y)};
@@ -204,7 +264,6 @@ List mingle_iter(NumericMatrix edges_xy, int k, int segments, double bundle_stre
             cp[i].y = bundle_strength * cp[i].y + (1 - bundle_strength) * straight.y;
         }
 
-        // resample the control polyline to `segments` points by arc length
         int kc = cp.size();
         std::vector<double> cl(kc, 0.0);
         for (int i = 1; i < kc; ++i) cl[i] = cl[i - 1] + dist(cp[i - 1], cp[i]);

@@ -35,5 +35,10 @@ Authors:
   \item David Schoch \email{david@schochastics.net} (\href{https://orcid.org/0000-0003-2952-4812}{ORCID})
 }
 
+Other contributors:
+\itemize{
+  \item Jose Luis Blanco-Claraco (Author of the bundled nanoflann C++ library) [copyright holder]
+}
+
 }
 \keyword{internal}

@@ -4,12 +4,14 @@
 \alias{edge_bundle_mingle}
 \title{MINGLE edge bundling}
 \usage{
-edge_bundle_mingle(object, xy, segments = 50, bundle_strength = 0.9)
+edge_bundle_mingle(object, xy, k = 10, segments = 50, bundle_strength = 0.9)
 }
 \arguments{
 \item{object}{a graph object (igraph/network/tbl_graph)}
 
 \item{xy}{coordinates of vertices}
+
+\item{k}{number of nearest neighbours considered as merge candidates per edge}
 
 \item{segments}{number of points sampled per bundled edge}
 
@@ -26,8 +28,8 @@ Multilevel agglomerative edge bundling (MINGLE).
 Groups edges bottom-up: two bundles are merged whenever routing them
 through shared meeting points reduces the total drawn length ("ink"). Meeting
 points are the geometric medians of the source-side and target-side endpoints.
-The nearest-neighbour search is currently brute force (O(E^2)); adequate for
-interactive graph sizes.
+A kNN proximity graph over the edges is built once with a kd-tree and then
+coarsened level by level (O(E log E)).
 
 see \href{https://github.com/schochastics/edgebundle}{online} for plotting tips
 }

@@ -1,12 +1,16 @@
 Package: edgebundle
 Title: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps
 Version: 0.4.2
-Authors@R: 
+Authors@R: c(
     person(given = "David",
            family = "Schoch",
            role = c("aut", "cre"),
            email = "david@schochastics.net",
-           comment = c(ORCID = "0000-0003-2952-4812"))
+           comment = c(ORCID = "0000-0003-2952-4812")),
+    person(given = "Jose Luis",
+           family = "Blanco-Claraco",
+           role = "cph",
+           comment = "Author of the bundled nanoflann C++ library"))
 Description: Implements several algorithms for bundling edges in networks and flow and metro map layouts. This includes force directed edge bundling <doi:10.1111/j.1467-8659.2009.01450.x>, a flow algorithm based on Steiner trees<doi:10.1080/15230406.2018.1437359> and a multicriteria optimization method for metro map layouts <doi:10.1109/TVCG.2010.24>.
 URL: https://github.com/schochastics/edgebundle, https://schochastics.github.io/edgebundle/
 BugReports: https://github.com/schochastics/edgebundle/issues
