@@ -1,0 +1,12 @@
+The file src/nanoflann.h is a copy of the nanoflann C++ library
+(https://github.com/jlblancoc/nanoflann), used for nearest-neighbour search
+in edge_bundle_mingle().
+
+nanoflann is distributed under the 2-clause BSD license:
+
+  Copyright 2008-2009  Marius Muja (mariusm@cs.ubc.ca). All rights reserved.
+  Copyright 2008-2009  David G. Lowe (lowe@cs.ubc.ca). All rights reserved.
+  Copyright 2011-2026  Jose Luis Blanco (joseluisblancoc@gmail.com).
+  All rights reserved.
+
+The full license text is retained in the header of src/nanoflann.h.

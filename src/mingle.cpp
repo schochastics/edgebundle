@@ -10,7 +10,7 @@
 // is built once with a kd-tree (vendored nanoflann), giving O(E log E); the
 // graph is then coarsened combinatorially level by level.
 #include <Rcpp.h>
-#include "nanoflann.hpp"
+#include "nanoflann.h"
 #include <set>
 #include <array>
 using namespace Rcpp;
