@@ -45,7 +45,9 @@
   a spiral-tree flow map (Verbeek, Buchin & Speckmann 2011): planar,
   angle-restricted, keeps node positions fixed, and needs no dummy nodes
   or triangulation. It is the recommended flow map layout; the
-  `tnss_*()` functions remain as an alternative
+  `tnss_*()` functions remain as an alternative.
+  `flow_tree(optimize = TRUE)` additionally refines the tree
+  (smoothness + obstacle avoidance) with join points held fixed
 - [`tnss_tree()`](https://schochastics.github.io/edgebundle/reference/tnss_tree.md):
   `order = "weight"` now orders leaves by flow magnitude (previously a
   no-op); fixed a bug in

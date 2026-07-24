@@ -11,7 +11,7 @@ merges, and is tuned by a single parameter `alpha`.
 ## Usage
 
 ``` r
-flow_tree(object, xy, root, alpha = 40, n = 20)
+flow_tree(object, xy, root, alpha = 40, n = 20, optimize = FALSE)
 ```
 
 ## Arguments
@@ -37,6 +37,13 @@ flow_tree(object, xy, root, alpha = 40, n = 20)
 - n:
 
   number of points sampled per tree edge
+
+- optimize:
+
+  logical. If `TRUE`, refine the tree with an approximate FLOWTREE
+  optimization (Verbeek et al. 2011, section 5): join points stay fixed
+  while edge interiors are relaxed for smoothness and to keep clear of
+  node obstacles. This can slightly relax the strict `alpha` bound.
 
 ## Value
 
