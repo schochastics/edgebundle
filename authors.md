@@ -11,7 +11,7 @@
 ## Citation
 
 Source:
-[`inst/CITATION`](https://github.com/schochastics/edgebundle/blob/main/inst/CITATION)
+[`inst/CITATION`](https://github.com/schochastics/edgebundle/blob/1.0.0/inst/CITATION)
 
 Schoch David (2023) edgebundle: Algorithms for Bundling Edges in
 Networks and Visualizing Flow and Metro Maps. R package version 0.4.1,
