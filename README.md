@@ -15,20 +15,29 @@ Downloads](https://cranlogs.r-pkg.org/badges/edgebundle)](https://CRAN.R-project
 An R package that implements several edge bundling/flow and metro map
 algorithms. So far it includes
 
-- Force directed edge bundling
+- Force directed edge bundling, with a divided variant for directed
+  graphs ([paper](https://doi.org/10.1109/TVCG.2011.237))
 - Stub bundling
   ([paper](https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf))
-- Hammer bundling ([python
-  code](https://datashader.org/_modules/datashader/bundling.html))
+- Hammer bundling via kernel density estimation
+  ([paper](https://doi.org/10.1111/j.1467-8659.2012.03079.x)) — native
+  C++, no Python required
 - Edge-path bundling ([paper](https://arxiv.org/abs/2108.05467))
-- TNSS flow map ([paper](https://doi.org/10.1080/15230406.2018.1437359))
-- Multicriteria Metro map layout
-  ([paper](https://doi.org/10.1109/TVCG.2010.24))
+- MINGLE, multilevel agglomerative bundling
+  ([paper](https://doi.org/10.1109/PACIFICVIS.2011.5742389))
+- Spiral-tree ([paper](https://doi.org/10.1109/TVCG.2011.202)) and TNSS
+  ([paper](https://doi.org/10.1080/15230406.2018.1437359)) flow maps
+
+All bundlers are also reachable through a single
+`edge_bundle(object, xy, type = )`.
 
 **[ggraph
 2.2.0](https://www.data-imaginist.com/posts/2024-02-15-ggraph-2-2-0/)
-supports edge bundling natively via `geom_edge_bundle_*()` functions.
-This means that parts of this package are now deprecated.**
+added native force-directed edge bundling via `geom_edge_bundle_*()`.
+`edgebundle` remains useful as a ggplot-agnostic toolkit that returns
+plain data frames and additionally provides methods ggraph does not:
+divided/directed bundling, stub, edge-path, MINGLE, a Python-free hammer,
+and flow maps.**
 
 ## Installation
 
@@ -44,9 +53,6 @@ The developer version can be installed with
 # install.packages("remotes")
 remotes::install_github("schochastics/edgebundle")
 ```
-
-Note that `edgebundle` imports `reticulate` and uses a pretty big python
-library (datashader).
 
 ``` r
 library(edgebundle)
@@ -124,7 +130,7 @@ For `edge_bundle_stub()`, you need `geom_bezier()` from the package
 
 ``` r
 library(ggforce)
-g <- graph.star(10, "undirected")
+g <- make_star(10, "undirected")
 
 xy <- matrix(c(
     0, 0,
@@ -302,9 +308,19 @@ p4
 ## Flow maps
 
 A flow map is a type of thematic map that represent movements. It may
-thus be considered a hybrid of a map and a flow diagram. The package so
-far implements a spatial one-to-many flow layout algorithm using
-triangulation and approximate Steiner trees.
+thus be considered a hybrid of a map and a flow diagram.
+
+The recommended layout is `flow_tree()`, an angle-restricted spiral tree:
+it is planar, keeps node positions fixed, needs no dummy nodes, and is
+controlled by a single angle parameter.
+
+``` r
+xy <- cbind(state.center$x, state.center$y)[!state.name %in% c("Alaska", "Hawaii"), ]
+flow <- flow_tree(cali2010, xy, root = 4, alpha = 40)
+```
+
+The package also implements the older TNSS layout based on triangulation
+and approximate Steiner trees.
 
 The function `tnss_tree()` expects a one-to-many flow network (i.e. a
 weighted star graph), a layout for the nodes and a set of dummy nodes
@@ -360,6 +376,9 @@ Metro map(-like) graph drawing follow certain rules, such as octilinear
 edges. The algorithm implemented in the packages uses hill-climbing to
 optimize several features desired in a metro map. The package includes
 the metro map of Berlin as an example.
+
+*Note:* `metro_multicriteria()` is deprecated and will be removed in a
+future release. Use `graphlayouts::layout_as_metromap()` instead.
 
 ``` r
 # the algorithm has problems with parallel edges
