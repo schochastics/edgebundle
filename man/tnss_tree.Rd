@@ -36,7 +36,10 @@ tnss_tree(
 approximated Steiner tree from dummy and real nodes as igraph object
 }
 \description{
-creates an approximated Steiner tree for a flow map visualization
+Creates an approximated Steiner tree for a flow map
+visualization. For most purposes \link{flow_tree} is now the recommended flow map
+layout (planar, angle-restricted, no dummy nodes); \code{tnss_tree} is kept as an
+alternative and requires the \code{interp} package for triangulation.
 }
 \details{
 Use \link{tnss_smooth} to smooth the edges of the tree

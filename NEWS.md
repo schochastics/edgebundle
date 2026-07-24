@@ -10,6 +10,7 @@
 * added `edge_bundle_mingle()`, multilevel agglomerative edge bundling (Gansner et al. 2011); the kNN proximity graph is built with a bundled kd-tree (nanoflann) for O(E log E) scaling, with a `k` parameter for the number of merge candidates per edge
 * `metro_multicriteria()` is deprecated in favour of `graphlayouts::layout_as_metromap()` and will be removed in a future release
 * added `flow_tree()`, a spiral-tree flow map (Verbeek, Buchin & Speckmann 2011): planar, angle-restricted, keeps node positions fixed, and needs no dummy nodes or triangulation. It is the recommended flow map layout; the `tnss_*()` functions remain as an alternative
+* `tnss_tree()`: `order = "weight"` now orders leaves by flow magnitude (previously a no-op); fixed a bug in `tnss_dummies()` where one diagonal corner was misplaced; removed dead code. `interp` moved from Imports to Suggests (only `tnss_tree()` needs it)
 
 # edgebundle 0.4.2
 
