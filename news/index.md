@@ -1,6 +1,6 @@
 # Changelog
 
-## edgebundle (development version)
+## edgebundle 1.0.0
 
 - added
   [`edge_bundle()`](https://schochastics.github.io/edgebundle/reference/edge_bundle.md),
