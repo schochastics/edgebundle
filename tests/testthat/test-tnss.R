@@ -7,6 +7,7 @@ test_that("tnss_dummies returns a two-column coordinate matrix", {
 })
 
 test_that("tnss_tree builds a connected Steiner tree spanning all leaves", {
+    skip_if_not_installed("interp")
     fx <- tnss_fixture()
     d <- tnss_dummies(fx$xy, root = fx$root)
     g <- tnss_tree(cali2010, fx$xy, d, root = fx$root, gamma = 0.9, order = "near")
@@ -16,7 +17,17 @@ test_that("tnss_tree builds a connected Steiner tree spanning all leaves", {
     expect_true(all(igraph::distances(g, fx$root, leafs) < Inf))
 })
 
+test_that("tnss_tree order = 'weight' processes leaves by flow", {
+    skip_if_not_installed("interp")
+    fx <- tnss_fixture()
+    d <- tnss_dummies(fx$xy, root = fx$root)
+    g <- tnss_tree(cali2010, fx$xy, d, root = fx$root, gamma = 0.9, order = "weight")
+    expect_s3_class(g, "steiner_tree")
+    expect_true(igraph::is_connected(g))
+})
+
 test_that("tnss_smooth returns smoothed paths with flow", {
+    skip_if_not_installed("interp")
     fx <- tnss_fixture()
     d <- tnss_dummies(fx$xy, root = fx$root)
     g <- tnss_tree(cali2010, fx$xy, d, root = fx$root, gamma = 0.9, order = "near")

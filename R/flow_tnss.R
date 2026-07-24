@@ -58,7 +58,7 @@ tnss_dummies <- function(xy, root,
         pts_tr <- c(max(xy[, 1]), max(xy[, 2]))
         pts_br <- c(max(xy[, 1]), min(xy[, 2]))
         pts_bl <- c(min(xy[, 1]), min(xy[, 2]))
-        pts_tl <- c(max(xy[, 1]), max(xy[, 2]))
+        pts_tl <- c(min(xy[, 1]), max(xy[, 2]))
         pts_extra <- rbind(pts_tr, pts_br, pts_bl, pts_tl)
         tseq <- seq(0.1, 0.9, length.out = ndiag)
         xy_extra <- do.call(rbind, lapply(1:4, function(x) cbind(pts_extra[x, 1] * tseq + xy[root, 1] * (1 - tseq), pts_extra[x, 2] * tseq + xy[root, 2] * (1 - tseq))))
@@ -84,7 +84,10 @@ tnss_dummies <- function(xy, root,
 }
 
 #' @title Create Steiner tree from real and dummy points
-#' @description creates an approximated Steiner tree for a flow map visualization
+#' @description Creates an approximated Steiner tree for a flow map
+#' visualization. For most purposes [flow_tree] is now the recommended flow map
+#' layout (planar, angle-restricted, no dummy nodes); `tnss_tree` is kept as an
+#' alternative and requires the `interp` package for triangulation.
 #' @param g original flow network (must be a one-to-many flow network, i.e star graph). Must have a weight attribute indicating the flow
 #' @param xy coordinates of "real" nodes
 #' @param xydummy coordinates of "dummy" nodes
@@ -104,6 +107,9 @@ tnss_dummies <- function(xy, root,
 #' @export
 
 tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = Inf, order = "random") {
+    if (!requireNamespace("interp", quietly = TRUE)) {
+        stop("The `interp` package is required for tnss_tree(); install it, or use flow_tree() which needs no triangulation.")
+    }
     xymesh <- rbind(xy, xydummy)
 
     n <- nrow(xy)
@@ -153,7 +159,10 @@ tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = I
     } else if (order == "far") {
         leafs <- leafs[order(dist2root, decreasing = TRUE)]
     } else if (order == "weight") {
-        leafs <- leafs
+        el0 <- igraph::as_edgelist(g, names = FALSE)
+        wall <- igraph::E(g)$weight
+        wleaf <- vapply(leafs, function(lf) sum(wall[el0[, 1] == lf | el0[, 2] == lf]), numeric(1))
+        leafs <- leafs[order(wleaf, decreasing = TRUE)]
     } else {
         leafs <- sample(leafs)
     }
@@ -276,45 +285,6 @@ tnss_smooth <- function(g, bw = 3, n = 10) {
 }
 
 # helpers ----
-DouglasPeucker <- function(points, epsilon) {
-    dmax <- 0
-    index <- 0
-    end <- nrow(points)
-    ResultList <- numeric(0)
-    if (end < 3) {
-        return(ResultList <- rbind(ResultList, points))
-    }
-    for (i in 2:(end - 1)) {
-        d <- ShortestDistance(points[i, ], line = rbind(points[1, ], points[end, ]))
-        if (d > dmax) {
-            index <- i
-            dmax <- d
-        }
-    }
-    # if dmax is greater than epsilon recursively apply
-    if (dmax > epsilon) {
-        recResults1 <- DouglasPeucker(points[1:index, ], epsilon)
-        recResults2 <- DouglasPeucker(points[index:end, ], epsilon)
-        ResultList <- rbind(ResultList, recResults1, recResults2)
-    } else {
-        ResultList <- rbind(ResultList, points[1, ], points[end, ])
-    }
-    ResultList <- as.matrix(ResultList[!duplicated(ResultList), ])
-    colnames(ResultList) <- c("x", "p")
-    return(ResultList)
-}
-
-ShortestDistance <- function(p, line) {
-    x1 <- line[1, 1]
-    y1 <- line[1, 2]
-    x2 <- line[2, 1]
-    y2 <- line[2, 2]
-    x0 <- p[1]
-    y0 <- p[2]
-    d <- abs((y2 - y1) * x0 - (x2 - x1) * y0 + x2 * y1 - y2 * x1) / sqrt((y2 - y1)^2 + (x2 - x1)^2)
-    return(as.numeric(d))
-}
-
 point_distance <- function(x) {
     d <- diff(x)
     sqrt(d[, 1]^2 + d[, 2]^2)

@@ -11,6 +11,7 @@ test_that("edge bundlers run without warnings", {
 })
 
 test_that("flow map functions run without warnings", {
+    skip_if_not_installed("interp")
     fx <- tnss_fixture()
     d <- tnss_dummies(fx$xy, root = fx$root)
     g <- expect_no_warning(tnss_tree(cali2010, fx$xy, d, root = fx$root, order = "near"))
