@@ -1,23 +1,16 @@
-# force directed edge bundling
+# Edge bundling
 
-Implements the classic edge bundling by Holten.
+Dispatches to one of the edge bundling algorithms by name. This is a
+thin wrapper over the individual `edge_bundle_*()` functions and mirrors
+the way frontends (e.g. vellumplot) select a bundling method.
 
 ## Usage
 
 ``` r
-edge_bundle_force(
+edge_bundle(
   object,
   xy,
-  K = 1,
-  C = 6,
-  P = 1,
-  S = 0.04,
-  P_rate = 2,
-  I = 50,
-  I_rate = 2/3,
-  compatibility_threshold = 0.6,
-  eps = 1e-08,
-  directed = FALSE,
+  type = c("force", "divided", "stub", "path", "hammer", "mingle"),
   ...
 )
 ```
@@ -32,80 +25,28 @@ edge_bundle_force(
 
   coordinates of vertices
 
-- K:
+- type:
 
-  spring constant
-
-- C:
-
-  number of iteration cycles
-
-- P:
-
-  number of initial edge divisions
-
-- S:
-
-  initial step size
-
-- P_rate:
-
-  rate of edge divisions
-
-- I:
-
-  number of initial iterations
-
-- I_rate:
-
-  rate of iteration decrease per cycle
-
-- compatibility_threshold:
-
-  threshold for when edges are considered compatible
-
-- eps:
-
-  accuracy
-
-- directed:
-
-  logical. If `TRUE`, use divided edge bundling (Selassie et al. 2011)
-  which keeps edges running in opposite directions in separate lanes.
-  Requires an igraph/tbl_graph object with edge directions.
+  bundling algorithm: `"force"` (force-directed, Holten), `"divided"`
+  (force-directed for directed graphs, Selassie et al.), `"stub"` (Nocaj
+  & Brandes), `"path"` (edge-path, Wallinger et al.), `"hammer"` (KDE,
+  Hurter et al.), or `"mingle"` (Gansner et al.)
 
 - ...:
 
-  arguments passed to the divided bundler when `directed = TRUE`:
-  `lane_width`, `k_spring`, `k_charge`, `decay`, `friction`, `step`,
-  `passes`, `iterations`, `use_connectivity`.
+  arguments passed on to the selected `edge_bundle_*()` function
 
 ## Value
 
-data.frame containing the bundled edges
-
-## Details
-
-This is a re-implementation of
-https://github.com/upphiminn/d3.ForceBundle. Force directed edge
-bundling is slow (O(E^2)).
-
-see [online](https://github.com/schochastics/edgebundle) for plotting
-tips
-
-## References
-
-Holten, Danny, and Jarke J. Van Wijk. "Force-Directed Edge Bundling for
-Graph Visualization." Computer Graphics Forum (Blackwell Publishing Ltd)
-28, no. 3 (2009): 983-990.
-
-Selassie, David, Brandon Heller, and Jeffrey Heer. "Divided edge
-bundling for directional network data." IEEE Transactions on
-Visualization and Computer Graphics 17, no. 12 (2011): 2354-2363.
+data.frame containing the bundled edges (`x`, `y`, `index`, `group`)
 
 ## See also
 
-[edge_bundle_hammer](https://schochastics.github.io/edgebundle/reference/edge_bundle_hammer.md),[edge_bundle_stub](https://schochastics.github.io/edgebundle/reference/edge_bundle_stub.md),[edge_bundle_path](https://schochastics.github.io/edgebundle/reference/edge_bundle_path.md)
+[edge_bundle_force](https://schochastics.github.io/edgebundle/reference/edge_bundle_force.md),
+[edge_bundle_stub](https://schochastics.github.io/edgebundle/reference/edge_bundle_stub.md),
+[edge_bundle_path](https://schochastics.github.io/edgebundle/reference/edge_bundle_path.md),
+[edge_bundle_hammer](https://schochastics.github.io/edgebundle/reference/edge_bundle_hammer.md),
+[edge_bundle_mingle](https://schochastics.github.io/edgebundle/reference/edge_bundle_mingle.md)
 
 ## Author
 
@@ -115,14 +56,19 @@ David Schoch
 
 ``` r
 library(igraph)
+#> 
+#> Attaching package: ‘igraph’
+#> The following objects are masked from ‘package:stats’:
+#> 
+#>     decompose, spectrum
+#> The following object is masked from ‘package:base’:
+#> 
+#>     union
 g <- graph_from_edgelist(
-    matrix(c(
-        1, 12, 2, 11, 3, 10,
-        4, 9, 5, 8, 6, 7
-    ), ncol = 2, byrow = TRUE), FALSE
+    matrix(c(1, 12, 2, 11, 3, 10, 4, 9, 5, 8, 6, 7), ncol = 2, byrow = TRUE), FALSE
 )
 xy <- cbind(c(rep(0, 6), rep(1, 6)), c(1:6, 1:6))
-edge_bundle_force(g, xy)
+edge_bundle(g, xy, type = "force")
 #>               x        y      index group
 #> 1   0.000000000 1.000000 0.00000000     1
 #> 2   0.008647966 1.185137 0.03030303     1

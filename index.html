@@ -36,6 +36,12 @@
     <div id="navbar" class="collapse navbar-collapse ms-3">
       <ul class="navbar-nav me-auto">
 <li class="nav-item"><a class="nav-link" href="reference/index.html">Reference</a></li>
+<li class="nav-item dropdown">
+  <button class="nav-link dropdown-toggle" type="button" id="dropdown-articles" data-bs-toggle="dropdown" aria-expanded="false" aria-haspopup="true">Articles</button>
+  <ul class="dropdown-menu" aria-labelledby="dropdown-articles">
+<li><a class="dropdown-item" href="articles/choosing-a-bundling-algorithm.html">Choosing a bundling algorithm</a></li>
+  </ul>
+</li>
 <li class="nav-item"><a class="nav-link" href="news/index.html">Changelog</a></li>
       </ul>
 <ul class="navbar-nav">
@@ -56,14 +62,15 @@
 
 <p>An R package that implements several edge bundling/flow and metro map algorithms. So far it includes</p>
 <ul>
-<li>Force directed edge bundling</li>
+<li>Force directed edge bundling, with a divided variant for directed graphs (<a href="https://doi.org/10.1109/TVCG.2011.237" class="external-link">paper</a>)</li>
 <li>Stub bundling (<a href="https://www.uni-konstanz.de/mmsp/pubsys/publishedFiles/NoBr13.pdf" class="external-link">paper</a>)</li>
-<li>Hammer bundling (<a href="https://datashader.org/_modules/datashader/bundling.html" class="external-link">python code</a>)</li>
+<li>Hammer bundling via kernel density estimation (<a href="https://doi.org/10.1111/j.1467-8659.2012.03079.x" class="external-link">paper</a>) — native C++, no Python required</li>
 <li>Edge-path bundling (<a href="https://arxiv.org/abs/2108.05467" class="external-link">paper</a>)</li>
-<li>TNSS flow map (<a href="https://doi.org/10.1080/15230406.2018.1437359" class="external-link">paper</a>)</li>
-<li>Multicriteria Metro map layout (<a href="https://doi.org/10.1109/TVCG.2010.24" class="external-link">paper</a>)</li>
+<li>MINGLE, multilevel agglomerative bundling (<a href="https://doi.org/10.1109/PACIFICVIS.2011.5742389" class="external-link">paper</a>)</li>
+<li>Spiral-tree (<a href="https://doi.org/10.1109/TVCG.2011.202" class="external-link">paper</a>) and TNSS (<a href="https://doi.org/10.1080/15230406.2018.1437359" class="external-link">paper</a>) flow maps</li>
 </ul>
-<p><strong><a href="https://www.data-imaginist.com/posts/2024-02-15-ggraph-2-2-0/" class="external-link">ggraph 2.2.0</a> supports edge bundling natively via <code>geom_edge_bundle_*()</code> functions. This means that parts of this package are now deprecated.</strong></p>
+<p>All bundlers are also reachable through a single <code>edge_bundle(object, xy, type = )</code>.</p>
+<p><strong><a href="https://www.data-imaginist.com/posts/2024-02-15-ggraph-2-2-0/" class="external-link">ggraph 2.2.0</a> added native force-directed edge bundling via <code>geom_edge_bundle_*()</code>. <code>edgebundle</code> remains useful as a ggplot-agnostic toolkit that returns plain data frames and additionally provides methods ggraph does not: divided/directed bundling, stub, edge-path, MINGLE, a Python-free hammer, and flow maps.</strong></p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
@@ -74,7 +81,6 @@
 <div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("remotes")</span></span>
 <span><span class="fu">remotes</span><span class="fu">::</span><span class="fu">install_github</span><span class="op">(</span><span class="st">"schochastics/edgebundle"</span><span class="op">)</span></span></code></pre></div>
-<p>Note that <code>edgebundle</code> imports <code>reticulate</code> and uses a pretty big python library (datashader).</p>
 <div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/schochastics/edgebundle" class="external-link">edgebundle</a></span><span class="op">)</span></span>
 <span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r.igraph.org/" class="external-link">igraph</a></span><span class="op">)</span></span></code></pre></div>
@@ -136,7 +142,7 @@ All functions return a data frame of points along the edges of the network that 
 <p>For <code><a href="reference/edge_bundle_stub.html">edge_bundle_stub()</a></code>, you need <code>geom_bezier()</code> from the package {{ggforce}}.</p>
 <div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggforce.data-imaginist.com" class="external-link">ggforce</a></span><span class="op">)</span></span>
-<span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/graph.star.html" class="external-link">graph.star</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"undirected"</span><span class="op">)</span></span>
+<span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/make_star.html" class="external-link">make_star</a></span><span class="op">(</span><span class="fl">10</span>, <span class="st">"undirected"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>    <span class="fl">0</span>, <span class="fl">0</span>,</span>
@@ -307,9 +313,14 @@ All functions return a data frame of points along the edges of the network that 
 <div class="section level2">
 <h2 id="flow-maps">Flow maps<a class="anchor" aria-label="anchor" href="#flow-maps"></a>
 </h2>
-<p>A flow map is a type of thematic map that represent movements. It may thus be considered a hybrid of a map and a flow diagram. The package so far implements a spatial one-to-many flow layout algorithm using triangulation and approximate Steiner trees.</p>
-<p>The function <code><a href="reference/tnss_tree.html">tnss_tree()</a></code> expects a one-to-many flow network (i.e. a weighted star graph), a layout for the nodes and a set of dummy nodes created with <code><a href="reference/tnss_dummies.html">tnss_dummies()</a></code>.</p>
+<p>A flow map is a type of thematic map that represent movements. It may thus be considered a hybrid of a map and a flow diagram.</p>
+<p>The recommended layout is <code><a href="reference/flow_tree.html">flow_tree()</a></code>, an angle-restricted spiral tree: it is planar, keeps node positions fixed, needs no dummy nodes, and is controlled by a single angle parameter.</p>
 <div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">state.center</span><span class="op">$</span><span class="va">x</span>, <span class="va">state.center</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">[</span><span class="op">!</span><span class="va">state.name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Alaska"</span>, <span class="st">"Hawaii"</span><span class="op">)</span>, <span class="op">]</span></span>
+<span><span class="va">flow</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/flow_tree.html">flow_tree</a></span><span class="op">(</span><span class="va">cali2010</span>, <span class="va">xy</span>, root <span class="op">=</span> <span class="fl">4</span>, alpha <span class="op">=</span> <span class="fl">40</span><span class="op">)</span></span></code></pre></div>
+<p>The package also implements the older TNSS layout based on triangulation and approximate Steiner trees.</p>
+<p>The function <code><a href="reference/tnss_tree.html">tnss_tree()</a></code> expects a one-to-many flow network (i.e. a weighted star graph), a layout for the nodes and a set of dummy nodes created with <code><a href="reference/tnss_dummies.html">tnss_dummies()</a></code>.</p>
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggraph.data-imaginist.com" class="external-link">ggraph</a></span><span class="op">)</span></span>
 <span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="va">state.center</span><span class="op">$</span><span class="va">x</span>, <span class="va">state.center</span><span class="op">$</span><span class="va">y</span><span class="op">)</span><span class="op">[</span><span class="op">!</span><span class="va">state.name</span> <span class="op"><a href="https://rdrr.io/r/base/match.html" class="external-link">%in%</a></span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Alaska"</span>, <span class="st">"Hawaii"</span><span class="op">)</span>, <span class="op">]</span></span>
 <span><span class="va">xy_dummy</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tnss_dummies.html">tnss_dummies</a></span><span class="op">(</span><span class="va">xy</span>, <span class="fl">4</span><span class="op">)</span></span>
@@ -328,7 +339,7 @@ All functions return a data frame of points along the edges of the network that 
 <span>    <span class="fu">labs</span><span class="op">(</span>title <span class="op">=</span> <span class="st">"Migration from California (2010) - Flow map"</span><span class="op">)</span></span></code></pre></div>
 <p><img src="reference/figures/cali2010_flow.png" width="95%" style="display: block; margin: auto;"></p>
 <p>To smooth the tree, use <code><a href="reference/tnss_smooth.html">tnss_smooth()</a></code>. Note that this changes the object type and you need to visualize it with {{ggplot2}} rather than {{ggraph}}.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">smooth_df</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/tnss_smooth.html">tnss_smooth</a></span><span class="op">(</span><span class="va">gtree</span>, bw <span class="op">=</span> <span class="fl">5</span>, n <span class="op">=</span> <span class="fl">20</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">ggplot</span><span class="op">(</span><span class="op">)</span> <span class="op">+</span></span>
@@ -347,7 +358,8 @@ All functions return a data frame of points along the edges of the network that 
 <h2 id="metro-maps">Metro Maps<a class="anchor" aria-label="anchor" href="#metro-maps"></a>
 </h2>
 <p>Metro map(-like) graph drawing follow certain rules, such as octilinear edges. The algorithm implemented in the packages uses hill-climbing to optimize several features desired in a metro map. The package includes the metro map of Berlin as an example.</p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<p><em>Note:</em> <code><a href="reference/metro_multicriteria.html">metro_multicriteria()</a></code> is deprecated and will be removed in a future release. Use <code>graphlayouts::layout_as_metromap()</code> instead.</p>
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># the algorithm has problems with parallel edges</span></span>
 <span><span class="va">g</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://r.igraph.org/reference/simplify.html" class="external-link">simplify</a></span><span class="op">(</span><span class="va">metro_berlin</span><span class="op">)</span></span>
 <span><span class="va">xy</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/cbind.html" class="external-link">cbind</a></span><span class="op">(</span><span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">lon</span>, <span class="fu"><a href="https://r.igraph.org/reference/V.html" class="external-link">V</a></span><span class="op">(</span><span class="va">g</span><span class="op">)</span><span class="op">$</span><span class="va">lat</span><span class="op">)</span> <span class="op">*</span> <span class="fl">100</span></span>

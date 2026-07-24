@@ -6,6 +6,8 @@
   : Migration from California in 2010
 - [`convert_edges()`](https://schochastics.github.io/edgebundle/reference/convert_edges.md)
   : Convert edges
+- [`edge_bundle()`](https://schochastics.github.io/edgebundle/reference/edge_bundle.md)
+  : Edge bundling
 - [`edge_bundle_force()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_force.md)
   : force directed edge bundling
 - [`edge_bundle_hammer()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_hammer.md)

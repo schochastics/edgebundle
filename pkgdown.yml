@@ -1,8 +1,9 @@
 pandoc: 3.8.3
 pkgdown: 2.2.1
 pkgdown_sha: ~
-articles: {}
-last_built: 2026-07-24T04:45Z
+articles:
+  articles/choosing-a-bundling-algorithm: choosing-a-bundling-algorithm.html
+last_built: 2026-07-24T04:58Z
 urls:
   reference: https://schochastics.github.io/edgebundle/reference
   article: https://schochastics.github.io/edgebundle/articles
