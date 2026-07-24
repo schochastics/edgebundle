@@ -361,9 +361,6 @@ ggplot() +
 
 <img src="man/figures/cali2010_flow_smoothed.png" alt="" width="95%" style="display: block; margin: auto;" />
 
-See [this gallery](http://minard.schochastics.net/) for more examples
-and code.
-
 ## Metro Maps
 
 Metro map(-like) graph drawing follow certain rules, such as octilinear
