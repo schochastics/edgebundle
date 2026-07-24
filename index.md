@@ -86,14 +86,10 @@ library(ggplot2)
 
 ggplot(fbundle) +
     geom_path(aes(x, y, group = group, col = as.factor(group)),
-        size = 2, show.legend = FALSE
+        linewidth = 2, show.legend = FALSE
     ) +
     geom_point(data = as.data.frame(xy), aes(V1, V2), size = 5) +
     theme_void()
-#> Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
-#> ℹ Please use `linewidth` instead.
-#> This warning is displayed once every 8 hours.
-#> Call `lifecycle::last_lifecycle_warnings()` to see where this warning was generated.
 ```
 
 ![](reference/figures/README-plot-1.png)
@@ -111,7 +107,7 @@ res <- edge_bundle_path(g, xy, max_distortion = 2, weight_fac = 2, segments = 50
 ggplot() +
     geom_path(
         data = res, aes(x, y, group = group, col = as.factor(group)),
-        size = 2, show.legend = FALSE
+        linewidth = 2, show.legend = FALSE
     ) +
     geom_point(data = as.data.frame(xy), aes(V1, V2), size = 5) +
     scale_color_manual(values = c("grey66", "firebrick3", "firebrick3", rep("grey66", 4))) +
@@ -145,7 +141,7 @@ xy <- matrix(c(
 sbundle <- edge_bundle_stub(g, xy, beta = 90)
 
 ggplot(sbundle) +
-    geom_bezier(aes(x, y, group = group), size = 1.5, col = "grey66") +
+    geom_bezier(aes(x, y, group = group), linewidth = 1.5, col = "grey66") +
     geom_point(data = as.data.frame(xy), aes(V1, V2), size = 5) +
     theme_void()
 ```
@@ -172,15 +168,15 @@ states <- map_data("state")
 p1 <- ggplot() +
     geom_polygon(
         data = states, aes(long, lat, group = group),
-        col = "white", size = 0.1, fill = NA
+        col = "white", linewidth =  0.1, fill = NA
     ) +
     geom_path(
         data = fbundle, aes(x, y, group = group),
-        col = "#9d0191", size = 0.05
+        col = "#9d0191", linewidth =  0.05
     ) +
     geom_path(
         data = fbundle, aes(x, y, group = group),
-        col = "white", size = 0.005
+        col = "white", linewidth =  0.005
     ) +
     geom_point(
         data = verts, aes(x, y),
@@ -201,15 +197,15 @@ p1 <- ggplot() +
 p2 <- ggplot() +
     geom_polygon(
         data = states, aes(long, lat, group = group),
-        col = "white", size = 0.1, fill = NA
+        col = "white", linewidth =  0.1, fill = NA
     ) +
     geom_path(
         data = hbundle, aes(x, y, group = group),
-        col = "#9d0191", size = 0.05
+        col = "#9d0191", linewidth =  0.05
     ) +
     geom_path(
         data = hbundle, aes(x, y, group = group),
-        col = "white", size = 0.005
+        col = "white", linewidth =  0.005
     ) +
     geom_point(
         data = verts, aes(x, y),
@@ -234,21 +230,21 @@ alpha_fct <- function(x, b = 0.01, p = 5, n = 20) {
 p3 <- ggplot() +
     geom_polygon(
         data = states, aes(long, lat, group = group),
-        col = "white", size = 0.1, fill = NA
+        col = "white", linewidth =  0.1, fill = NA
     ) +
     ggforce::geom_bezier(
         data = sbundle, aes(x, y,
             group = group,
             alpha = alpha_fct(..index.. * 20)
         ), n = 20,
-        col = "#9d0191", size = 0.1, show.legend = FALSE
+        col = "#9d0191", linewidth =  0.1, show.legend = FALSE
     ) +
     ggforce::geom_bezier(
         data = sbundle, aes(x, y,
             group = group,
             alpha = alpha_fct(..index.. * 20)
         ), n = 20,
-        col = "white", size = 0.01, show.legend = FALSE
+        col = "white", linewidth =  0.01, show.legend = FALSE
     ) +
     geom_point(
         data = verts, aes(x, y),
@@ -269,15 +265,15 @@ p3 <- ggplot() +
 p4 <- ggplot() +
     geom_polygon(
         data = states, aes(long, lat, group = group),
-        col = "white", size = 0.1, fill = NA
+        col = "white", linewidth =  0.1, fill = NA
     ) +
     geom_path(
         data = pbundle, aes(x, y, group = group),
-        col = "#9d0191", size = 0.05
+        col = "#9d0191", linewidth =  0.05
     ) +
     geom_path(
         data = pbundle, aes(x, y, group = group),
-        col = "white", size = 0.005
+        col = "white", linewidth =  0.005
     ) +
     geom_point(
         data = verts, aes(x, y),
@@ -321,9 +317,7 @@ flow <- flow_tree(cali2010, xy, root = 4, alpha = 40)
 ```
 
 The package also implements the older TNSS layout based on triangulation
-and approximate Steiner trees.
-
-The function
+and approximate Steiner trees. The function
 [`tnss_tree()`](https://schochastics.github.io/edgebundle/reference/tnss_tree.md)
 expects a one-to-many flow network (i.e. a weighted star graph), a
 layout for the nodes and a set of dummy nodes created with
@@ -363,7 +357,7 @@ smooth_df <- tnss_smooth(gtree, bw = 5, n = 20)
 ggplot() +
     geom_polygon(data = us, aes(long, lat, group = group), fill = "#FDF8C7", col = "black") +
     geom_path(
-        data = smooth_df, aes(x, y, group = destination, size = flow),
+        data = smooth_df, aes(x, y, group = destination, linewidth =  flow),
         lineend = "round", col = "firebrick3", alpha = 1
     ) +
     theme_void() +
