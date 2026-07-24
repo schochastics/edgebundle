@@ -36,6 +36,12 @@
 - [`metro_multicriteria()`](https://schochastics.github.io/edgebundle/reference/metro_multicriteria.md)
   is deprecated in favour of `graphlayouts::layout_as_metromap()` and
   will be removed in a future release
+- added
+  [`flow_tree()`](https://schochastics.github.io/edgebundle/reference/flow_tree.md),
+  a spiral-tree flow map (Verbeek, Buchin & Speckmann 2011): planar,
+  angle-restricted, keeps node positions fixed, and needs no dummy nodes
+  or triangulation. It is the recommended flow map layout; the
+  `tnss_*()` functions remain as an alternative
 
 ## edgebundle 0.4.2
 

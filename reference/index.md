@@ -16,6 +16,8 @@
   : Edge-Path Bundling
 - [`edge_bundle_stub()`](https://schochastics.github.io/edgebundle/reference/edge_bundle_stub.md)
   : stub edge bundling
+- [`flow_tree()`](https://schochastics.github.io/edgebundle/reference/flow_tree.md)
+  : Spiral flow tree
 - [`metro_berlin`](https://schochastics.github.io/edgebundle/reference/metro_berlin.md)
   : Subway network of Berlin
 - [`metro_multicriteria()`](https://schochastics.github.io/edgebundle/reference/metro_multicriteria.md)
