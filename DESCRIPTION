@@ -1,6 +1,6 @@
 Package: edgebundle
 Title: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps
-Version: 0.4.2.9000
+Version: 1.0.0
 Authors@R: c(
     person(given = "David",
            family = "Schoch",

@@ -1,4 +1,4 @@
-# edgebundle (development version)
+# edgebundle 1.0.0
 
 * added `edge_bundle()`, a single entry point that dispatches to any bundler via `type = c("force", "divided", "stub", "path", "hammer", "mingle")`
 * switched the test suite to testthat edition 3 and added correctness tests for every exported function
