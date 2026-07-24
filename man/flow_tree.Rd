@@ -4,7 +4,7 @@
 \alias{flow_tree}
 \title{Spiral flow tree}
 \usage{
-flow_tree(object, xy, root, alpha = 40, n = 20)
+flow_tree(object, xy, root, alpha = 40, n = 20, optimize = FALSE)
 }
 \arguments{
 \item{object}{a one-to-many flow network (star graph) as igraph/tbl_graph,
@@ -18,6 +18,11 @@ with a \code{weight} edge attribute giving the flow}
 tightly toward the root; typical values are 20-45.}
 
 \item{n}{number of points sampled per tree edge}
+
+\item{optimize}{logical. If \code{TRUE}, refine the tree with an approximate
+FLOWTREE optimization (Verbeek et al. 2011, section 5): join points stay
+fixed while edge interiors are relaxed for smoothness and to keep clear of
+node obstacles. This can slightly relax the strict \code{alpha} bound.}
 }
 \value{
 data.frame with columns \code{x}, \code{y}, \code{flow} and \code{edge} (one smooth arc

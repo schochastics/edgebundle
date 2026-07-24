@@ -86,6 +86,24 @@ test_that("flow_tree keeps leaf endpoints fixed at their coordinates", {
     expect_true(all(hit))
 })
 
+test_that("flow_tree(optimize = TRUE) refines while keeping the skeleton", {
+    xy <- cali_xy()
+    base <- flow_tree(cali2010, xy, root = 4, alpha = 40, n = 20)
+    opt <- flow_tree(cali2010, xy, root = 4, alpha = 40, n = 20, optimize = TRUE)
+    expect_named(opt, c("x", "y", "flow", "edge"))
+    expect_equal(sort(unique(opt$edge)), sort(unique(base$edge)))
+    expect_true(all(is.finite(opt$x)) && all(is.finite(opt$y)))
+    # join points and leaves are fixed: edge endpoints must match the skeleton
+    for (k in unique(base$edge)) {
+        b <- base[base$edge == k, ]
+        o <- opt[opt$edge == k, ]
+        expect_equal(unname(as.matrix(b[c(1, nrow(b)), c("x", "y")])),
+                     unname(as.matrix(o[c(1, nrow(o)), c("x", "y")])))
+    }
+    # refinement must not introduce crossings
+    expect_equal(count_crossings(opt), 0)
+})
+
 test_that("flow_tree requires a graph object", {
     expect_error(flow_tree(list(), cbind(0, 0), root = 1), "requires an .igraph")
 })
