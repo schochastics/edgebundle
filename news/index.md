@@ -42,6 +42,14 @@
   angle-restricted, keeps node positions fixed, and needs no dummy nodes
   or triangulation. It is the recommended flow map layout; the
   `tnss_*()` functions remain as an alternative
+- [`tnss_tree()`](https://schochastics.github.io/edgebundle/reference/tnss_tree.md):
+  `order = "weight"` now orders leaves by flow magnitude (previously a
+  no-op); fixed a bug in
+  [`tnss_dummies()`](https://schochastics.github.io/edgebundle/reference/tnss_dummies.md)
+  where one diagonal corner was misplaced; removed dead code. `interp`
+  moved from Imports to Suggests (only
+  [`tnss_tree()`](https://schochastics.github.io/edgebundle/reference/tnss_tree.md)
+  needs it)
 
 ## edgebundle 0.4.2
 

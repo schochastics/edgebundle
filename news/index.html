@@ -44,6 +44,8 @@
 <li>
 <code><a href="../reference/metro_multicriteria.html">metro_multicriteria()</a></code> is deprecated in favour of <code>graphlayouts::layout_as_metromap()</code> and will be removed in a future release</li>
 <li>added <code><a href="../reference/flow_tree.html">flow_tree()</a></code>, a spiral-tree flow map (Verbeek, Buchin &amp; Speckmann 2011): planar, angle-restricted, keeps node positions fixed, and needs no dummy nodes or triangulation. It is the recommended flow map layout; the <code>tnss_*()</code> functions remain as an alternative</li>
+<li>
+<code><a href="../reference/tnss_tree.html">tnss_tree()</a></code>: <code>order = "weight"</code> now orders leaves by flow magnitude (previously a no-op); fixed a bug in <code><a href="../reference/tnss_dummies.html">tnss_dummies()</a></code> where one diagonal corner was misplaced; removed dead code. <code>interp</code> moved from Imports to Suggests (only <code><a href="../reference/tnss_tree.html">tnss_tree()</a></code> needs it)</li>
 </ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="0.4.2" id="edgebundle-042">edgebundle 0.4.2<a class="anchor" aria-label="anchor" href="#edgebundle-042"></a></h2><p class="text-muted">CRAN release: 2023-12-16</p>

@@ -1,6 +1,11 @@
 # Create Steiner tree from real and dummy points
 
-creates an approximated Steiner tree for a flow map visualization
+Creates an approximated Steiner tree for a flow map visualization. For
+most purposes
+[flow_tree](https://schochastics.github.io/edgebundle/reference/flow_tree.md)
+is now the recommended flow map layout (planar, angle-restricted, no
+dummy nodes); `tnss_tree` is kept as an alternative and requires the
+`interp` package for triangulation.
 
 ## Usage
 
