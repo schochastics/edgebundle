@@ -2,6 +2,8 @@
 
 ## edgebundle 1.0.0
 
+CRAN release: 2026-07-24
+
 - added
   [`edge_bundle()`](https://schochastics.github.io/edgebundle/reference/edge_bundle.md),
   a single entry point that dispatches to any bundler via
