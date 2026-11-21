@@ -40,3 +40,32 @@ test_that("tnss_smooth returns smoothed paths with flow", {
 test_that("tnss_smooth rejects non-steiner-tree input", {
     expect_error(tnss_smooth(igraph::make_ring(3)), "steiner tree")
 })
+
+test_that("tnss_tree flow uses only root-leaf edges (#32)", {
+    skip_if_not_installed("interp")
+    xy <- cbind(c(0, 1, 1, -1, -1, 2, -2), c(0, 1, -1, 1, -1, 0, 0))
+    leaf_flow <- function(g) {
+        set.seed(1)
+        tr <- tnss_tree(g, xy, tnss_dummies(xy, root = 1), root = 1)
+        el <- igraph::as_edgelist(tr, names = FALSE)
+        vapply(2:7, function(lf) igraph::E(tr)$flow[el[, 1] == lf | el[, 2] == lf][1], numeric(1))
+    }
+    star <- igraph::make_star(7, mode = "out")
+    igraph::E(star)$weight <- c(10, 20, 30, 40, 50, 60)
+
+    expect_equal(leaf_flow(star), c(10, 20, 30, 40, 50, 60))
+    expect_no_warning(
+        f <- leaf_flow(igraph::add_edges(star, c(2, 3, 4, 5), weight = c(5, 5)))
+    )
+    expect_equal(f, c(10, 20, 30, 40, 50, 60))
+    expect_no_warning(
+        f <- leaf_flow(igraph::add_edges(star, c(1, 2), weight = 15))
+    )
+    expect_equal(f, c(25, 20, 30, 40, 50, 60))
+})
+
+test_that("tnss_tree errors clearly without a weight attribute", {
+    xy <- cbind(c(0, 1, -1), c(0, 1, -1))
+    g <- igraph::make_star(3, mode = "out")
+    expect_error(tnss_tree(g, xy, tnss_dummies(xy, root = 1), root = 1), "weight")
+})

@@ -112,9 +112,21 @@ tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = I
     }
     xymesh <- rbind(xy, xydummy)
 
+    if (is.null(igraph::E(g)$weight)) {
+        stop("`g` must have a `weight` edge attribute holding the flow.")
+    }
     n <- nrow(xy)
     verts <- 1:n
     leafs <- setdiff(verts, root)
+
+    # flow from the root to each leaf: summed weight of root-leaf edges only
+    el0 <- igraph::as_edgelist(g, names = FALSE)
+    from_root <- el0[, 1] == root | el0[, 2] == root
+    other_end <- ifelse(el0[, 1] == root, el0[, 2], el0[, 1])
+    wroot <- numeric(n)
+    wroot[leafs] <- vapply(leafs, function(lf) {
+        sum(igraph::E(g)$weight[from_root & other_end == lf])
+    }, numeric(1))
 
     # triangulate points
     tria <- interp::tri.mesh(xymesh[, 1], xymesh[, 2], duplicate = "remove")
@@ -159,10 +171,7 @@ tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = I
     } else if (order == "far") {
         leafs <- leafs[order(dist2root, decreasing = TRUE)]
     } else if (order == "weight") {
-        el0 <- igraph::as_edgelist(g, names = FALSE)
-        wall <- igraph::E(g)$weight
-        wleaf <- vapply(leafs, function(lf) sum(wall[el0[, 1] == lf | el0[, 2] == lf]), numeric(1))
-        leafs <- leafs[order(wleaf, decreasing = TRUE)]
+        leafs <- leafs[order(wroot[leafs], decreasing = TRUE)]
     } else {
         leafs <- sample(leafs)
     }
@@ -215,10 +224,8 @@ tnss_tree <- function(g, xy, xydummy, root, gamma = 0.9, epsilon = 0.3, elen = I
     # calculate flow from edge weight
     gfinal <- g5
     igraph::E(gfinal)$flow <- 0
-    el <- igraph::as_edgelist(g, FALSE)
     for (dest in leafs) {
-        ide <- which(el[, 1] == dest | el[, 2] == dest)
-        w <- igraph::E(g)$weight[ide]
+        w <- wroot[dest]
         sp <- igraph::shortest_paths(gfinal, root, dest, weights = NA, output = "epath")
 
         igraph::E(gfinal)$flow[unlist(sp$epath)] <- igraph::E(gfinal)$flow[unlist(sp$epath)] + w
