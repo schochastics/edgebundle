@@ -1,5 +1,17 @@
 # Changelog
 
+## edgebundle 1.0.1
+
+- fixed
+  [`tnss_tree()`](https://schochastics.github.io/edgebundle/reference/tnss_tree.md)
+  when the flow network has edges other than root-to-leaf edges: the
+  flow (and `order = "weight"`) used the weights of all edges touching a
+  leaf, causing recycling warnings and wrong flows. Only root-leaf edges
+  are now used, and multiple root-leaf edges are summed
+  ([\#32](https://github.com/schochastics/edgebundle/issues/32))
+- [`tnss_tree()`](https://schochastics.github.io/edgebundle/reference/tnss_tree.md)
+  now errors clearly if `g` has no `weight` edge attribute
+
 ## edgebundle 1.0.0
 
 CRAN release: 2026-07-24

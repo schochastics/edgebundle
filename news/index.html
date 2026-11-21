@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">edgebundle</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">1.0.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -33,6 +33,12 @@
       <small>Source: <a href="https://github.com/schochastics/edgebundle/blob/main/NEWS.md" class="external-link"><code>NEWS.md</code></a></small>
     </div>
 
+    <div class="section level2">
+<h2 class="pkg-version" data-toc-text="1.0.1" id="edgebundle-101">edgebundle 1.0.1<a class="anchor" aria-label="anchor" href="#edgebundle-101"></a></h2>
+<ul><li>fixed <code><a href="../reference/tnss_tree.html">tnss_tree()</a></code> when the flow network has edges other than root-to-leaf edges: the flow (and <code>order = "weight"</code>) used the weights of all edges touching a leaf, causing recycling warnings and wrong flows. Only root-leaf edges are now used, and multiple root-leaf edges are summed (<a href="https://github.com/schochastics/edgebundle/issues/32" class="external-link">#32</a>)</li>
+<li>
+<code><a href="../reference/tnss_tree.html">tnss_tree()</a></code> now errors clearly if <code>g</code> has no <code>weight</code> edge attribute</li>
+</ul></div>
     <div class="section level2">
 <h2 class="pkg-version" data-toc-text="1.0.0" id="edgebundle-100">edgebundle 1.0.0<a class="anchor" aria-label="anchor" href="#edgebundle-100"></a></h2><p class="text-muted">CRAN release: 2026-07-24</p>
 <ul><li>added <code><a href="../reference/edge_bundle.html">edge_bundle()</a></code>, a single entry point that dispatches to any bundler via <code>type = c("force", "divided", "stub", "path", "hammer", "mingle")</code>
