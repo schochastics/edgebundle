@@ -1,6 +1,6 @@
 Package: edgebundle
 Title: Algorithms for Bundling Edges in Networks and Visualizing Flow and Metro Maps
-Version: 1.0.0
+Version: 1.0.1
 Authors@R: c(
     person(given = "David",
            family = "Schoch",
@@ -31,4 +31,4 @@ Imports:
     igraph
 Depends:
     R (>= 3.5)
-Config/roxygen2/version: 8.0.0.9000
+Config/roxygen2/version: 8.1.0

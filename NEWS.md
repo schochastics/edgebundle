@@ -1,3 +1,8 @@
+# edgebundle 1.0.1
+
+* fixed `tnss_tree()` when the flow network has edges other than root-to-leaf edges: the flow (and `order = "weight"`) used the weights of all edges touching a leaf, causing recycling warnings and wrong flows. Only root-leaf edges are now used, and multiple root-leaf edges are summed (#32)
+* `tnss_tree()` now errors clearly if `g` has no `weight` edge attribute
+
 # edgebundle 1.0.0
 
 * added `edge_bundle()`, a single entry point that dispatches to any bundler via `type = c("force", "divided", "stub", "path", "hammer", "mingle")`
